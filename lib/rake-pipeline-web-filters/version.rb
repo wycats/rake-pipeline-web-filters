@@ -1,5 +1,5 @@
 module Rake
-  module Pipeline
+  class Pipeline
     module Web
       module Filters
         VERSION = "0.5.0"

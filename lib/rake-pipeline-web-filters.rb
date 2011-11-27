@@ -1,11 +1,13 @@
-require "rake-pipeline-web-filters/version"
+require "rake-pipeline"
 
 module Rake
-  module Pipeline
+  class Pipeline
     module Web
       module Filters
-        # Your code goes here...
       end
     end
   end
 end
+
+require "rake-pipeline-web-filters/version"
+require "rake-pipeline-web-filters/tilt"
