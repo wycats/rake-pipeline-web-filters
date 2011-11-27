@@ -14,7 +14,7 @@ module Rake::Pipeline::Web::Filters
   #
   #     # Compile each SCSS file using Tilt, replacing the
   #     # scss extension with css.
-  #     filter(Rake::Pipeline::TiltFilter) do |input|
+  #     filter(Rake::Pipeline::Web::Filters::TiltFilter) do |input|
   #       input.sub(/\.scss$/, 'css')
   #     end
   #   end
