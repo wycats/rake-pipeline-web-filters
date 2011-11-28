@@ -12,3 +12,4 @@ end
 require "rake-pipeline-web-filters/version"
 require "rake-pipeline-web-filters/tilt"
 require "rake-pipeline-web-filters/sass_compiler"
+require "rake-pipeline-web-filters/minispade"
