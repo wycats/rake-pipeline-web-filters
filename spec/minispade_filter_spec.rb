@@ -13,12 +13,17 @@ describe "MinispadeFilter" do
     ]
   }
 
+  let(:output_file) {
+    MemoryFileWrapper.files["/path/to/output/foo.js"]
+  }
+
   def make_filter(*args)
     filter = Rake::Pipeline::Web::Filters::MinispadeFilter.new(*args)
     filter.file_wrapper_class = MemoryFileWrapper
     filter.input_files = input_files
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
+    filter.generate_rake_tasks.each(&:invoke)
     filter
   end
 
@@ -26,12 +31,12 @@ describe "MinispadeFilter" do
     filter = make_filter
 
     filter.output_files.should == output_files
+    output_file.body.should == "minispade.register('/path/to/input/foo.js',function() { var foo = 'bar'; });"
+    output_file.encoding.should == "UTF-8"
+  end
 
-    tasks = filter.generate_rake_tasks
-    tasks.each(&:invoke)
-
-    file = MemoryFileWrapper.files["/path/to/output/foo.js"]
-    file.body.should == "minispade.register('/path/to/input/foo.js',function() { var foo = 'bar'; });"
-    file.encoding.should == "UTF-8"
+  it "uses strict if asked" do
+    filter = make_filter(:use_strict => true)
+    output_file.body.should == "minispade.register('/path/to/input/foo.js',function() { \"use strict\"; var foo = 'bar'; });"
   end
 end
