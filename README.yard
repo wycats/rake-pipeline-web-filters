@@ -1,0 +1,32 @@
+= Rake::Pipeline::Web::Filters
+
+Rake::Pipeline::Web::Filters is a collection of filters for Rake::Pipeline
+for creating pipelines to generate web content.
+
+= Usage
+
+In your +Assetfile+:
+
+  !!!ruby
+  require "rake-pipeline-web-filters"
+
+  input "assets"
+  output "public"
+
+  # Take all JS inputs and wrap each of them in code to
+  # register them with the Minispade module loader.
+  match "*.js" do
+    filter Rake::Pipeline::Web::Filters::MinispadeFilter
+  end
+
+  # Take all SCSS inputs and compile them with Sass
+  match "*.scss" do
+    filter Rake::Pipeline::Web::Filters::SassCompiler
+  end
+
+= Available Filters
+
+* {Rake::Pipeline::Web::Filters::MinispadeFilter}: Wraps JS code for use with Minispade
+* {Rake::Pipeline::Web::Filters::SassCompiler}: Compiles SCSS or Sass to CSS
+* {Rake::Pipeline::Web::Filters::TiltFilter}: Compiles templates with the Tilt template interface
+
