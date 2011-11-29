@@ -15,10 +15,14 @@ module Rake::Pipeline::Web::Filters
 
     # @param [Hash] options
     # @option options [Boolean] :use_strict Whether to add "use strict" to
-    #                           each outputted function; defaults to false.
+    #   each outputted function; defaults to false.
+    # @option options [Proc] :module_id_generator a proc to use to generate
+    #   the minispade module id.
     def initialize(options = {})
       super()
       @use_strict = !!options[:use_strict]
+      @module_id_generator = options[:module_id_generator] ||
+        proc { |input| input.fullpath.sub(Dir.pwd, '') }
     end
 
     # Implement the {#generate_output} method required by
@@ -35,7 +39,7 @@ module Rake::Pipeline::Web::Filters
         code = input.read
         code = '"use strict"; ' + code if @use_strict
         function = "function() { #{code} }"
-        ret = "minispade.register('#{input.fullpath.sub(Dir.pwd,'')}',#{function});"
+        ret = "minispade.register('#{@module_id_generator.call(input)}',#{function});"
         output.write ret
       end
     end

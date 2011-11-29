@@ -39,4 +39,9 @@ describe "MinispadeFilter" do
     filter = make_filter(:use_strict => true)
     output_file.body.should == "minispade.register('/path/to/input/foo.js',function() { \"use strict\"; var foo = 'bar'; });"
   end
+
+  it "takes a proc to name the module" do
+    filter = make_filter(:module_id_generator => proc { |input| "octopus" })
+    output_file.body.should == "minispade.register('octopus',function() { var foo = 'bar'; });"
+  end
 end
