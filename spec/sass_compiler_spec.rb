@@ -18,8 +18,10 @@ $blue: #3bbfce
 SASS
 
   EXPECTED_CSS_OUTPUT = <<-CSS
+/* line 3 */
 .border {
-  border-color: #3bbfce; }
+  border-color: #3bbfce;
+}
 CSS
 
   def input_file(name, content)
@@ -66,6 +68,19 @@ CSS
   it "accepts options to pass to the Sass compiler" do
     filter = setup_filter(SassCompiler.new(:syntax => :sass))
     filter.input_files = [input_file("border.sass", SASS_INPUT)]
+    tasks = filter.generate_rake_tasks
+    tasks.each(&:invoke)
+    file = MemoryFileWrapper.files["/path/to/output/border.css"]
+    file.body.should == EXPECTED_CSS_OUTPUT
+  end
+
+  it "passes Compass's options to the Sass compiler" do
+    Compass.configuration do |c|
+      c.preferred_syntax = :sass
+    end
+
+    filter = setup_filter(SassCompiler.new)
+    filter.input_files = [input_file("border.css", SCSS_INPUT)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]

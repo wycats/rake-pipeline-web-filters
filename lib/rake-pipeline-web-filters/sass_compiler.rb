@@ -1,8 +1,10 @@
 require 'sass'
+require 'compass'
 
 module Rake::Pipeline::Web::Filters
   # A filter that compiles input files written in SCSS
-  # to CSS using the Sass compiler.
+  # to CSS using the Sass compiler and the Compass CSS
+  # framework.
   #
   # @example
   #   !!!ruby
@@ -21,12 +23,16 @@ module Rake::Pipeline::Web::Filters
 
     # @param [Hash] options options to pass to the Sass
     #   compiler
+    # @option options [Array] :additional_load_paths a
+    #   list of paths to append to Sass's :load_path.
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={}, &block)
       block ||= proc { |input| input.sub(/\.(scss|sass)$/, '.css') }
       super(&block)
-      @options = options
+      @options = Compass.configuration.to_sass_engine_options
+      @options[:load_paths].concat(Array(options.delete(:additional_load_paths)))
+      @options.merge!(options)
     end
 
     # Implement the {#generate_output} method required by
