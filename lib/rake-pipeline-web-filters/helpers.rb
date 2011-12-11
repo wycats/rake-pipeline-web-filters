@@ -44,6 +44,12 @@ module Rake::Pipeline::Web::Filters
     def tilt(*args, &block)
       filter(Rake::Pipeline::Web::Filters::TiltFilter, *args, &block)
     end
+
+    # Add a new {MarkdownCompiler} to the pipeline.
+    # @see MarkdownCompiler#initialize
+    def markdown(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::MarkdownCompiler, *args, &block)
+    end
   end
 end
 

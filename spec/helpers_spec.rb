@@ -47,4 +47,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::TiltFilter)
     end
   end
+
+  describe "#markdown" do
+    it "creates a MarkdownCompiler" do
+      dsl.markdown
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::MarkdownCompiler)
+    end
+  end
 end
