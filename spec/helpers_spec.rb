@@ -6,7 +6,7 @@ describe "Helpers" do
   let(:dsl) { Rake::Pipeline::DSL.new(pipeline) }
 
   before do
-    pipeline.input_root = "."
+    pipeline.input_roots << ["."]
   end
 
   def filter
