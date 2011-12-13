@@ -54,4 +54,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::MarkdownCompiler)
     end
   end
+
+  describe "#cache_buster" do
+    it "creates a CacheBuster" do
+      dsl.cache_buster
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CacheBuster)
+    end
+  end
 end
