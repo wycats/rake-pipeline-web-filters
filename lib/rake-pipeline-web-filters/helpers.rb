@@ -50,6 +50,12 @@ module Rake::Pipeline::Web::Filters
     def markdown(*args, &block)
       filter(Rake::Pipeline::Web::Filters::MarkdownCompiler, *args, &block)
     end
+
+    # Add a new {CacheBuster} to the pipeline.
+    # @see CacheBuster#initialize
+    def cache_buster(&block)
+      filter(Rake::Pipeline::Web::Filters::CacheBuster, &block)
+    end
   end
 end
 

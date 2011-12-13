@@ -15,4 +15,5 @@ require "rake-pipeline-web-filters/sass_compiler"
 require "rake-pipeline-web-filters/minispade_filter"
 require "rake-pipeline-web-filters/ordering_concat_filter"
 require "rake-pipeline-web-filters/markdown_compiler"
+require "rake-pipeline-web-filters/cache_buster"
 
