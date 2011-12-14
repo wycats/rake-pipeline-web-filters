@@ -15,7 +15,7 @@ MARKDOWN
   EXPECTED_HTML_OUTPUT = <<-HTML
 <h2>This is an H2</h2>
 
-<p>Some <em>important</em> text. It might have a link: http:&#47;&#47;foo.com&#47;</p>
+<p>Some <em>important</em> text. It might have a link: http://foo.com/</p>
 
 <pre><code>Some code
 </code></pre>
