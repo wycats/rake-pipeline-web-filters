@@ -1,10 +1,12 @@
-require 'sass'
-require 'compass'
+require 'rake-pipeline-web-filters/filter_with_dependencies'
 
 module Rake::Pipeline::Web::Filters
   # A filter that compiles input files written in SCSS
   # to CSS using the Sass compiler and the Compass CSS
   # framework.
+  #
+  # Requires {http://rubygems.org/gems/sass sass} and
+  # {http://rubygems.org/gems/compass compass}
   #
   # @example
   #   !!!ruby
@@ -17,6 +19,8 @@ module Rake::Pipeline::Web::Filters
   #     filter Rake::Pipeline::Web::Filters::SassCompiler
   #   end
   class SassCompiler < Rake::Pipeline::Filter
+    include Rake::Pipeline::Web::Filters::FilterWithDependencies
+
     # @return [Hash] a hash of options to pass to Sass
     #   when compiling.
     attr_reader :options
@@ -48,6 +52,12 @@ module Rake::Pipeline::Web::Filters
       inputs.each do |input|
         output.write Sass.compile(input.read, options)
       end
+    end
+
+    private
+
+    def external_dependencies
+      [ 'sass', 'compass' ]
     end
   end
 end

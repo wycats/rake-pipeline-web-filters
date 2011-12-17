@@ -1,10 +1,12 @@
-require 'tilt'
+require 'rake-pipeline-web-filters/filter_with_dependencies'
 
 module Rake::Pipeline::Web::Filters
   # A filter that accepts a series of inputs and translates
   # them using the Tilt template interface, which will attempt
   # to guess which template language to use based on the input
   # file extension.
+  #
+  # Requires {http://rubygems.org/gems/tilt/ tilt}
   #
   # @example
   #   !!!ruby
@@ -19,6 +21,8 @@ module Rake::Pipeline::Web::Filters
   #     end
   #   end
   class TiltFilter < Rake::Pipeline::Filter
+    include Rake::Pipeline::Web::Filters::FilterWithDependencies
+
     # @return [Hash] a hash of options to pass to Tilt
     #   when rendering.
     attr_reader :options
@@ -57,6 +61,10 @@ module Rake::Pipeline::Web::Filters
 
         output.write out
       end
+    end
+
+    def external_dependencies
+      [ 'tilt' ]
     end
   end
 end
