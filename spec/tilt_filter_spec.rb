@@ -52,4 +52,28 @@ describe "TiltFilter" do
     file = MemoryFileWrapper.files["/path/to/output/foo.txt"]
     file.body.should == "foo\n"
   end
+
+  describe 'with a rendering context' do
+
+    let(:input_files) do
+      [
+        MemoryFileWrapper.new("/path/to/input", "foo.erb", "UTF-8", "<%= foo %>"),
+      ]
+    end
+
+    let(:context) do
+      context = Class.new do
+        def foo; 'foo'; end
+      end.new
+    end
+
+    it 'uses the context' do
+      filter = make_filter({}, context)
+
+      tasks = filter.generate_rake_tasks
+      tasks.each(&:invoke)
+      file = MemoryFileWrapper.files["/path/to/output/foo.txt"]
+      file.body.should == "foo"
+    end
+  end
 end

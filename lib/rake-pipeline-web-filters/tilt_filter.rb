@@ -23,13 +23,18 @@ module Rake::Pipeline::Web::Filters
     #   when rendering.
     attr_reader :options
 
+    # @return [Object] an object to use as the rendering
+    #   context.
+    attr_reader :context
+
     # @param [Hash] options options to pass to the Tilt
     #   template class constructor.
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
-    def initialize(options={}, &block)
+    def initialize(options={}, context = nil, &block)
       super(&block)
       @options = options
+      @context = context || Object.new
     end
 
     # Implement the {#generate_output} method required by
@@ -45,7 +50,7 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       inputs.each do |input|
         out = if (template_class = Tilt[input.path])
-          template_class.new(nil, 1, options) { |t| input.read }.render
+          template_class.new(nil, 1, options) { |t| input.read }.render(context)
         else
           input.read
         end
