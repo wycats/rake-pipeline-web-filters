@@ -61,4 +61,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::CacheBuster)
     end
   end
+
+  describe "#coffee_script" do
+    it "creates a CoffeeScriptCompiler" do
+      dsl.coffee_script
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler)
+    end
+  end
 end

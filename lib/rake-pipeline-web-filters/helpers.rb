@@ -56,6 +56,12 @@ module Rake::Pipeline::Web::Filters
     def cache_buster(&block)
       filter(Rake::Pipeline::Web::Filters::CacheBuster, &block)
     end
+
+    # Add a new {CoffeeScriptCompiler} to the pipeline.
+    # @see CoffeeScriptCompiler#initialize
+    def coffee_script(&block)
+      filter(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler, &block)
+    end
   end
 end
 
