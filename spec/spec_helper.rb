@@ -62,6 +62,7 @@ class Rake::Pipeline
 
     module Filters
       ConcatFilter = Rake::Pipeline::ConcatFilter
+      MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
       class StripAssertsFilter < Rake::Pipeline::Filter
         def generate_output(inputs, output)

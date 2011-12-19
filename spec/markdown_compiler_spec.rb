@@ -1,5 +1,4 @@
 describe "MarkdownCompiler" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
   MarkdownCompiler = Rake::Pipeline::Web::Filters::MarkdownCompiler
 
   MARKDOWN_INPUT = <<-MARKDOWN

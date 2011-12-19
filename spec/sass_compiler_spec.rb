@@ -1,5 +1,4 @@
 describe "SassCompiler" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
   SassCompiler = Rake::Pipeline::Web::Filters::SassCompiler
 
   SCSS_INPUT = <<-SCSS

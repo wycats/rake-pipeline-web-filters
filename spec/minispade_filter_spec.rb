@@ -1,6 +1,4 @@
 describe "MinispadeFilter" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
-
   let(:input_files) {
     [
       MemoryFileWrapper.new("/path/to/input", "foo.js", "UTF-8", "var foo = 'bar';")

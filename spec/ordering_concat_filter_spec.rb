@@ -1,6 +1,4 @@
 describe "OrderingConcatFilter" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
-
   let(:input_files) {
     [
       MemoryFileWrapper.new("/path/to/input", "first.txt", "UTF-8", "FIRST"),
