@@ -18,5 +18,5 @@ require "rake-pipeline-web-filters/ordering_concat_filter"
 require "rake-pipeline-web-filters/sass_compiler"
 require "rake-pipeline-web-filters/tilt_filter"
 require "rake-pipeline-web-filters/coffee_script_compiler"
+require "rake-pipeline-web-filters/yui_javascript_compressor"
 require "rake-pipeline-web-filters/helpers"
-

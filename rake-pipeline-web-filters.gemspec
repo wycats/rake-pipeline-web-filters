@@ -23,4 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "compass"
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "redcarpet", '~> 2.0'
+  gem.add_development_dependency "yui-compressor"
 end
