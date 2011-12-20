@@ -50,6 +50,7 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
+        options[:syntax] = :sass if input.path.match(/\.sass$/)
         output.write Sass.compile(input.read, options)
       end
     end

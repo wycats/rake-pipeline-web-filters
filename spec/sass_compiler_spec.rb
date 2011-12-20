@@ -66,6 +66,15 @@ CSS
 
   it "accepts options to pass to the Sass compiler" do
     filter = setup_filter(SassCompiler.new(:syntax => :sass))
+    filter.input_files = [input_file("border.sass_file", SASS_INPUT)]
+    tasks = filter.generate_rake_tasks
+    tasks.each(&:invoke)
+    file = MemoryFileWrapper.files["/path/to/output/border.sass_file"]
+    file.body.should == EXPECTED_CSS_OUTPUT
+  end
+
+  it "compiles files with a .sass extension as sass" do
+    filter = setup_filter(SassCompiler.new)
     filter.input_files = [input_file("border.sass", SASS_INPUT)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
