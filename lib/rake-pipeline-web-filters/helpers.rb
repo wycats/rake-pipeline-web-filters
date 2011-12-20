@@ -62,6 +62,12 @@ module Rake::Pipeline::Web::Filters
     def coffee_script(&block)
       filter(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler, &block)
     end
+
+    # Add a new {YUIJavaScriptCompressor} to the pipeline.
+    # @see YUIJavaScriptCompressor#initialize
+    def yui(&block)
+      filter(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor, &block)
+    end
   end
 end
 

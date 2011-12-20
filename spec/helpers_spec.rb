@@ -68,4 +68,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler)
     end
   end
+
+  describe "#yui" do
+    it "creates a YUIJavaScriptCompressor" do
+      dsl.yui
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor)
+    end
+  end
 end
