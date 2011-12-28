@@ -1,7 +1,7 @@
 describe "MarkdownCompiler" do
   MarkdownCompiler = Rake::Pipeline::Web::Filters::MarkdownCompiler
 
-  MARKDOWN_INPUT = <<-MARKDOWN
+  let(:markdown_input) { <<-MARKDOWN }
 ## This is an H2
 
 Some *important* text. It might have a link: http://foo.com/
@@ -11,7 +11,7 @@ Some *important* text. It might have a link: http://foo.com/
 That's all.
 MARKDOWN
 
-  EXPECTED_HTML_OUTPUT = <<-HTML
+  let(:expected_html_output) { <<-HTML }
 <h2>This is an H2</h2>
 
 <p>Some <em>important</em> text. It might have a link: http://foo.com/</p>
@@ -32,7 +32,7 @@ HTML
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("page.md", MARKDOWN_INPUT)]
+    filter.input_files = [input_file("page.md", markdown_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -47,7 +47,7 @@ HTML
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/page.html"]
-    file.body.should == EXPECTED_HTML_OUTPUT
+    file.body.should == expected_html_output
     file.encoding.should == "UTF-8"
   end
 
@@ -65,7 +65,7 @@ HTML
 
   it "passes options to the Markdown compiler" do
     filter = setup_filter(MarkdownCompiler.new(:autolink => true))
-    filter.input_files = [input_file("page.md", MARKDOWN_INPUT)]
+    filter.input_files = [input_file("page.md", markdown_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/page.html"]
@@ -74,11 +74,11 @@ HTML
 
   it "accepts a :compiler option" do
     filter = setup_filter(MarkdownCompiler.new(:compiler => proc { |text, options| text }))
-    filter.input_files = [input_file("page.md", MARKDOWN_INPUT)]
+    filter.input_files = [input_file("page.md", markdown_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/page.html"]
-    file.body.should == MARKDOWN_INPUT
+    file.body.should == markdown_input
   end
 
 end

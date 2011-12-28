@@ -1,14 +1,18 @@
 describe "YUIJavaScriptCompressor" do
   YUICompressor = Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor
 
-  JS_INPUT = <<-HERE
+  let(:js_input) { <<-HERE }
 var name = "Truckasaurus Gates";
 console.log(name);
 HERE
 
-  EXPECTED_JS_OUTPUT = 'var name="Truckasaurus Gates";console.log(name);'
+  let(:expected_js_output) {
+    'var name="Truckasaurus Gates";console.log(name);'
+  }
 
-  EXPECTED_LINEBREAK_JS_OUTPUT = %[var name="Truckasaurus Gates";\nconsole.log(name);]
+  let(:expected_linebreak_js_output) {
+    %[var name="Truckasaurus Gates";\nconsole.log(name);]
+  }
 
   def input_file(name, content)
     MemoryFileWrapper.new("/path/to/input", name, "UTF-8", content)
@@ -20,7 +24,7 @@ HERE
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("name.js", JS_INPUT)]
+    filter.input_files = [input_file("name.js", js_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -35,7 +39,7 @@ HERE
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/name.min.js"]
-    file.body.should == EXPECTED_JS_OUTPUT
+    file.body.should == expected_js_output
     file.encoding.should == "UTF-8"
   end
 
@@ -53,11 +57,11 @@ HERE
 
   it "accepts options to pass to the YUI compressor" do
     filter = setup_filter(YUICompressor.new(:line_break => 0))
-    filter.input_files = [input_file("name.js", JS_INPUT)]
+    filter.input_files = [input_file("name.js", js_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/name.min.js"]
-    file.body.should == EXPECTED_LINEBREAK_JS_OUTPUT
+    file.body.should == expected_linebreak_js_output
   end
 
 end

@@ -1,14 +1,14 @@
 describe "CoffeeScriptCompiler" do
   CoffeeScriptCompiler = Rake::Pipeline::Web::Filters::CoffeeScriptCompiler
 
-  COFFEE_INPUT = <<-COFFEE
+  let(:coffee_input) { <<-COFFEE }
 x = 1;
 
 y = ->
   x += 1
   COFFEE
 
-  EXPECTED_COFFEE_OUTPUT = <<-HTML
+  let(:expected_coffee_output) { <<-HTML }
 (function() {
   var x, y;
   x = 1;
@@ -28,7 +28,7 @@ y = ->
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("input.coffee", COFFEE_INPUT)]
+    filter.input_files = [input_file("input.coffee", coffee_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -43,7 +43,7 @@ y = ->
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/input.js"]
-    file.body.should == EXPECTED_COFFEE_OUTPUT
+    file.body.should == expected_coffee_output
     file.encoding.should == "UTF-8"
   end
 

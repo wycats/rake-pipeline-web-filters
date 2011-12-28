@@ -1,7 +1,7 @@
 describe "SassCompiler" do
   SassCompiler = Rake::Pipeline::Web::Filters::SassCompiler
 
-  SCSS_INPUT = <<-SCSS
+  let(:scss_input) { <<-SCSS }
 $blue: #3bbfce;
 
 .border {
@@ -9,14 +9,14 @@ $blue: #3bbfce;
 }
 SCSS
 
-  SASS_INPUT = <<-SASS
+  let(:sass_input) { <<-SASS }
 $blue: #3bbfce
 
 .border
   border-color: $blue
 SASS
 
-  EXPECTED_CSS_OUTPUT = <<-CSS
+  let(:expected_css_output) { <<-CSS }
 /* line 3 */
 .border {
   border-color: #3bbfce;
@@ -33,7 +33,7 @@ CSS
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("border.scss", SCSS_INPUT)]
+    filter.input_files = [input_file("border.scss", scss_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -48,7 +48,7 @@ CSS
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == EXPECTED_CSS_OUTPUT
+    file.body.should == expected_css_output
     file.encoding.should == "UTF-8"
   end
 
@@ -66,20 +66,20 @@ CSS
 
   it "accepts options to pass to the Sass compiler" do
     filter = setup_filter(SassCompiler.new(:syntax => :sass))
-    filter.input_files = [input_file("border.sass_file", SASS_INPUT)]
+    filter.input_files = [input_file("border.sass_file", sass_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.sass_file"]
-    file.body.should == EXPECTED_CSS_OUTPUT
+    file.body.should == expected_css_output
   end
 
   it "compiles files with a .sass extension as sass" do
     filter = setup_filter(SassCompiler.new)
-    filter.input_files = [input_file("border.sass", SASS_INPUT)]
+    filter.input_files = [input_file("border.sass", sass_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == EXPECTED_CSS_OUTPUT
+    file.body.should == expected_css_output
   end
 
   it "passes Compass's options to the Sass compiler" do
@@ -88,10 +88,10 @@ CSS
     end
 
     filter = setup_filter(SassCompiler.new)
-    filter.input_files = [input_file("border.css", SCSS_INPUT)]
+    filter.input_files = [input_file("border.css", scss_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == EXPECTED_CSS_OUTPUT
+    file.body.should == expected_css_output
   end
 end
