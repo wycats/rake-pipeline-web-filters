@@ -69,10 +69,17 @@ describe "Helpers" do
     end
   end
 
-  describe "#yui" do
+  describe "#yui_javascript" do
     it "creates a YUIJavaScriptCompressor" do
-      dsl.yui
+      dsl.yui_javascript
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor)
+    end
+  end
+
+  describe "#yui_css" do
+    it "creates a YUICssCompressor" do
+      dsl.yui_css
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUICssCompressor)
     end
   end
 end

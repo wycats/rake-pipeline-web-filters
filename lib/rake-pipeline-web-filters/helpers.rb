@@ -65,8 +65,14 @@ module Rake::Pipeline::Web::Filters
 
     # Add a new {YUIJavaScriptCompressor} to the pipeline.
     # @see YUIJavaScriptCompressor#initialize
-    def yui(&block)
-      filter(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor, &block)
+    def yui_javascript(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor, *args, &block)
+    end
+
+    # Add a new {YUICssCompressor} to the pipeline.
+    # @see YUICssCompressor#initialize
+    def yui_css(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::YUICssCompressor, *args, &block)
     end
   end
 end
