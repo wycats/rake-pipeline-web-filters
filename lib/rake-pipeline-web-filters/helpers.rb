@@ -62,6 +62,12 @@ module Rake::Pipeline::Web::Filters
     def yui_css(*args, &block)
       filter(Rake::Pipeline::Web::Filters::YUICssCompressor, *args, &block)
     end
+
+    # Add a new {UglifyFilter} to the pipeline.
+    # @see UglifyFilter#initialize
+    def uglify(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::UglifyFilter, *args, &block)
+    end
   end
 end
 

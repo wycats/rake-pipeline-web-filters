@@ -68,4 +68,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUICssCompressor)
     end
   end
+
+  describe "#uglify" do
+    it "creates an UglifyFilter" do
+      dsl.uglify
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::UglifyFilter)
+    end
+  end
 end
