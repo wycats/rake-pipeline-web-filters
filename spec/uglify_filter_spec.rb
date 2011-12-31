@@ -7,7 +7,7 @@ console.log(name);
 HERE
 
   let(:expected_js_output) {
-    'var name="Truckasaurus Gates";console.log(name);'
+    'var name="Truckasaurus Gates";console.log(name)'
   }
 
   let(:expected_beautiful_js_output) {
@@ -31,7 +31,7 @@ HERE
   end
 
   it "generates output" do
-    filter = setup_filter YUICompressor.new
+    filter = setup_filter UglifyFilter.new
 
     filter.output_files.should == [output_file("name.min.js")]
 

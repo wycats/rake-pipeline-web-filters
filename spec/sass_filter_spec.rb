@@ -1,5 +1,5 @@
-describe "SassCompiler" do
-  SassCompiler = Rake::Pipeline::Web::Filters::SassCompiler
+describe "SassFilter" do
+  SassFilter = Rake::Pipeline::Web::Filters::SassFilter
 
   let(:scss_input) { <<-SCSS }
 $blue: #3bbfce;
@@ -40,7 +40,7 @@ CSS
   end
 
   it "generates output" do
-    filter = setup_filter SassCompiler.new
+    filter = setup_filter SassFilter.new
 
     filter.output_files.should == [output_file("border.css")]
 
@@ -54,18 +54,18 @@ CSS
 
   describe "naming output files" do
     it "translates .scss extensions to .css by default" do
-      filter = setup_filter SassCompiler.new
+      filter = setup_filter SassFilter.new
       filter.output_files.first.path.should == "border.css"
     end
 
     it "accepts a block to customize output file names" do
-      filter = setup_filter(SassCompiler.new { |input| "octopus" })
+      filter = setup_filter(SassFilter.new { |input| "octopus" })
       filter.output_files.first.path.should == "octopus"
     end
   end
 
   it "accepts options to pass to the Sass compiler" do
-    filter = setup_filter(SassCompiler.new(:syntax => :sass))
+    filter = setup_filter(SassFilter.new(:syntax => :sass))
     filter.input_files = [input_file("border.sass_file", sass_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
@@ -74,7 +74,7 @@ CSS
   end
 
   it "compiles files with a .sass extension as sass" do
-    filter = setup_filter(SassCompiler.new)
+    filter = setup_filter(SassFilter.new)
     filter.input_files = [input_file("border.sass", sass_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
@@ -87,7 +87,7 @@ CSS
       c.preferred_syntax = :sass
     end
 
-    filter = setup_filter(SassCompiler.new)
+    filter = setup_filter(SassFilter.new)
     filter.input_files = [input_file("border.css", scss_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)

@@ -16,9 +16,9 @@ module Rake::Pipeline::Web::Filters
   #
   #     # Compile each SCSS file under the app/assets
   #     # directory.
-  #     filter Rake::Pipeline::Web::Filters::SassCompiler
+  #     filter Rake::Pipeline::Web::Filters::SassFilter
   #   end
-  class SassCompiler < Rake::Pipeline::Filter
+  class SassFilter < Rake::Pipeline::Filter
     include Rake::Pipeline::Web::Filters::FilterWithDependencies
 
     # @return [Hash] a hash of options to pass to Sass

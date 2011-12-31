@@ -1,5 +1,5 @@
-describe "MarkdownCompiler" do
-  MarkdownCompiler = Rake::Pipeline::Web::Filters::MarkdownCompiler
+describe "MarkdownFilter" do
+  MarkdownFilter = Rake::Pipeline::Web::Filters::MarkdownFilter
 
   let(:markdown_input) { <<-MARKDOWN }
 ## This is an H2
@@ -39,7 +39,7 @@ HTML
   end
 
   it "generates output" do
-    filter = setup_filter MarkdownCompiler.new
+    filter = setup_filter MarkdownFilter.new
 
     filter.output_files.should == [output_file("page.html")]
 
@@ -53,18 +53,18 @@ HTML
 
   describe "naming output files" do
     it "translates .md extensions to .html by default" do
-      filter = setup_filter MarkdownCompiler.new
+      filter = setup_filter MarkdownFilter.new
       filter.output_files.first.path.should == "page.html"
     end
 
     it "accepts a block to customize output file names" do
-      filter = setup_filter(MarkdownCompiler.new { |input| "octopus" })
+      filter = setup_filter(MarkdownFilter.new { |input| "octopus" })
       filter.output_files.first.path.should == "octopus"
     end
   end
 
   it "passes options to the Markdown compiler" do
-    filter = setup_filter(MarkdownCompiler.new(:autolink => true))
+    filter = setup_filter(MarkdownFilter.new(:autolink => true))
     filter.input_files = [input_file("page.md", markdown_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
@@ -73,7 +73,7 @@ HTML
   end
 
   it "accepts a :compiler option" do
-    filter = setup_filter(MarkdownCompiler.new(:compiler => proc { |text, options| text }))
+    filter = setup_filter(MarkdownFilter.new(:compiler => proc { |text, options| text }))
     filter.input_files = [input_file("page.md", markdown_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)

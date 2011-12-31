@@ -14,9 +14,9 @@ module Rake::Pipeline::Web::Filters
   #
   #     # Compress each JS file under the app/assets
   #     # directory.
-  #     filter Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor
+  #     filter Rake::Pipeline::Web::Filters::YUIJavaScriptFilter
   #   end
-  class YUIJavaScriptCompressor < Rake::Pipeline::Filter
+  class YUIJavaScriptFilter < Rake::Pipeline::Filter
     include Rake::Pipeline::Web::Filters::FilterWithDependencies
 
     # @return [Hash] a hash of options to pass to the
