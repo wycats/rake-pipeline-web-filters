@@ -18,11 +18,14 @@ module Rake::Pipeline::Web::Filters
     #   each outputted function; defaults to false.
     # @option options [Proc] :module_id_generator a proc to use to generate
     #   the minispade module id.
+    # @option options [Boolean] :rewrite_requires If true, change calls to
+    #   +require+ in the source to +minispade.require+.
     def initialize(options = {})
       super()
       @use_strict = !!options[:use_strict]
       @module_id_generator = options[:module_id_generator] ||
         proc { |input| input.fullpath.sub(Dir.pwd, '') }
+      @rewrite_requires = !!options[:rewrite_requires]
     end
 
     # Implement the {#generate_output} method required by
@@ -37,8 +40,9 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       inputs.each do |input|
         code = input.read
+        code.gsub!(%r{^\s*require\(}, 'minispade.require(') if @rewrite_requires
         code = '"use strict"; ' + code if @use_strict
-        function = "function() { #{code} }"
+        function = "function() {#{code}}"
         ret = "minispade.register('#{@module_id_generator.call(input)}',#{function});"
         output.write ret
       end
