@@ -14,18 +14,6 @@ module Rake::Pipeline::Web::Filters
   #     sass :syntax => :sass
   #   end
   module Helpers
-    # If the first argument is an Array, add a new {OrderingConcatFilter}
-    # to the pipeline. Otherwise add a new {Rake::Pipeline::ConcatFilter}.
-    # @see OrderingConcatFilter#initialize
-    # @see Rake::Pipeline::ConcatFilter#initialize
-    def concat(*args, &block)
-      if args.first.kind_of?(Array)
-        filter(Rake::Pipeline::Web::Filters::OrderingConcatFilter, *args, &block)
-      else
-        filter(Rake::Pipeline::ConcatFilter, *args, &block)
-      end
-    end
-
     # Add a new {MinispadeFilter} to the pipeline.
     # @see MinispadeFilter#initialize
     def minispade(*args, &block)
