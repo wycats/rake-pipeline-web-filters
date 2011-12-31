@@ -1,7 +1,7 @@
-describe "CacheBuster" do
+describe "CacheBusterFilter" do
 
   MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
-  CacheBuster = Rake::Pipeline::Web::Filters::CacheBuster
+  CacheBusterFilter = Rake::Pipeline::Web::Filters::CacheBusterFilter
 
   let(:content) { "it doesn't matter" }
 
@@ -23,7 +23,7 @@ describe "CacheBuster" do
 
   describe 'DEFAULT_KEY_GENERATOR' do
 
-    subject { CacheBuster::DEFAULT_KEY_GENERATOR }
+    subject { CacheBusterFilter::DEFAULT_KEY_GENERATOR }
 
     it "returns the MD5 hash of the input's file name and contents" do
       expected = Digest::MD5.new << input_file.path << content
@@ -35,11 +35,11 @@ describe "CacheBuster" do
   describe 'with the default cache key strategy' do
 
     let(:output_file) {
-      key = CacheBuster::DEFAULT_KEY_GENERATOR.call(input_file)
+      key = CacheBusterFilter::DEFAULT_KEY_GENERATOR.call(input_file)
       MemoryFileWrapper.new output_root, "file-#{key}.txt", 'UTF-8'
     }
 
-    subject { setup_filter CacheBuster.new }
+    subject { setup_filter CacheBusterFilter.new }
 
     it 'outputs to the MD5 hash of the file name and contents' do
       subject.output_files.should == [ output_file ]
@@ -62,7 +62,7 @@ describe "CacheBuster" do
     }
 
     subject do
-      setup_filter(CacheBuster.new() { 'foo' })
+      setup_filter(CacheBusterFilter.new() { 'foo' })
     end
 
     it 'uses the custom key strategy' do

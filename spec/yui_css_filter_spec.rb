@@ -1,5 +1,5 @@
-describe "YUICssCompressor" do
-  YUICssCompressor = Rake::Pipeline::Web::Filters::YUICssCompressor
+describe "YUICssFilter" do
+  YUICssFilter = Rake::Pipeline::Web::Filters::YUICssFilter
 
   let(:css_input) { <<-HERE }
 div.error {
@@ -35,7 +35,7 @@ HERE
   end
 
   it "generates output" do
-    filter = setup_filter YUICssCompressor.new
+    filter = setup_filter YUICssFilter.new
 
     filter.output_files.should == [output_file("error.min.css")]
 
@@ -49,18 +49,18 @@ HERE
 
   describe "naming output files" do
     it "translates .css extensions to .min.css by default" do
-      filter = setup_filter YUICssCompressor.new
+      filter = setup_filter YUICssFilter.new
       filter.output_files.first.path.should == "error.min.css"
     end
 
     it "accepts a block to customize output file names" do
-      filter = setup_filter(YUICssCompressor.new { |input| "octopus" })
+      filter = setup_filter(YUICssFilter.new { |input| "octopus" })
       filter.output_files.first.path.should == "octopus"
     end
   end
 
   it "accepts options to pass to the YUI compressor" do
-    filter = setup_filter(YUICssCompressor.new(:line_break => 0))
+    filter = setup_filter(YUICssFilter.new(:line_break => 0))
     filter.input_files = [input_file("error.css", css_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)

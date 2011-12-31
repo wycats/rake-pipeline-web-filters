@@ -7,9 +7,9 @@ module Rake::Pipeline::Web::Filters
   #     input "app/assets"
   #     output "public"
   #
-  #     filter Rake::Pipeline::Web::Filters::CacheBuster
+  #     filter Rake::Pipeline::Web::Filters::CacheBusterFilter
   #   end
-  class CacheBuster < Rake::Pipeline::Filter
+  class CacheBusterFilter < Rake::Pipeline::Filter
 
     # @return [Proc] the default cache key generator, which
     #   takes the MD5 hash of the input's file name and contents.

@@ -1,7 +1,7 @@
 module Rake::Pipeline::Web::Filters
   # A filter that compiles CoffeeScript to JavaScript.
-  class CoffeeScriptCompiler < Rake::Pipeline::Filter
-    # By default, the CoffeeScriptCompiler converts inputs
+  class CoffeeScriptFilter < Rake::Pipeline::Filter
+    # By default, the CoffeeScriptFilter converts inputs
     # with the extension +.coffee+ to +.js+.
     #
     # @param [Proc] block the output name generator block

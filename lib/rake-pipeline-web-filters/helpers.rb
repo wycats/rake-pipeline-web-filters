@@ -5,7 +5,7 @@ module Rake::Pipeline::Web::Filters
   # Instead of:
   #   !!!ruby
   #   match("*.scss") do
-  #     filter Rake::Pipeline::Web::Filters::SassCompiler, :syntax => :sass
+  #     filter Rake::Pipeline::Web::Filters::SassFilter, :syntax => :sass
   #   end
   #
   # You can do:
@@ -20,10 +20,10 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::MinispadeFilter, *args, &block)
     end
 
-    # Add a new {SassCompiler} to the pipeline.
-    # @see SassCompiler#initialize
+    # Add a new {SassFilter} to the pipeline.
+    # @see SassFilter#initialize
     def sass(*args, &block)
-      filter(Rake::Pipeline::Web::Filters::SassCompiler, *args, &block)
+      filter(Rake::Pipeline::Web::Filters::SassFilter, *args, &block)
     end
     alias_method :scss, :sass
 
@@ -33,34 +33,34 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::TiltFilter, *args, &block)
     end
 
-    # Add a new {MarkdownCompiler} to the pipeline.
-    # @see MarkdownCompiler#initialize
+    # Add a new {MarkdownFilter} to the pipeline.
+    # @see MarkdownFilter#initialize
     def markdown(*args, &block)
-      filter(Rake::Pipeline::Web::Filters::MarkdownCompiler, *args, &block)
+      filter(Rake::Pipeline::Web::Filters::MarkdownFilter, *args, &block)
     end
 
-    # Add a new {CacheBuster} to the pipeline.
-    # @see CacheBuster#initialize
+    # Add a new {CacheBusterFilter} to the pipeline.
+    # @see CacheBusterFilter#initialize
     def cache_buster(&block)
-      filter(Rake::Pipeline::Web::Filters::CacheBuster, &block)
+      filter(Rake::Pipeline::Web::Filters::CacheBusterFilter, &block)
     end
 
-    # Add a new {CoffeeScriptCompiler} to the pipeline.
-    # @see CoffeeScriptCompiler#initialize
+    # Add a new {CoffeeScriptFilter} to the pipeline.
+    # @see CoffeeScriptFilter#initialize
     def coffee_script(&block)
-      filter(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler, &block)
+      filter(Rake::Pipeline::Web::Filters::CoffeeScriptFilter, &block)
     end
 
-    # Add a new {YUIJavaScriptCompressor} to the pipeline.
-    # @see YUIJavaScriptCompressor#initialize
+    # Add a new {YUIJavaScriptFilter} to the pipeline.
+    # @see YUIJavaScriptFilter#initialize
     def yui_javascript(*args, &block)
-      filter(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor, *args, &block)
+      filter(Rake::Pipeline::Web::Filters::YUIJavaScriptFilter, *args, &block)
     end
 
-    # Add a new {YUICssCompressor} to the pipeline.
-    # @see YUICssCompressor#initialize
+    # Add a new {YUICssFilter} to the pipeline.
+    # @see YUICssFilter#initialize
     def yui_css(*args, &block)
-      filter(Rake::Pipeline::Web::Filters::YUICssCompressor, *args, &block)
+      filter(Rake::Pipeline::Web::Filters::YUICssFilter, *args, &block)
     end
 
     # Add a new {UglifyFilter} to the pipeline.
