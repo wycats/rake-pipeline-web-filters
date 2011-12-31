@@ -1,5 +1,5 @@
-describe "CoffeeScriptCompiler" do
-  CoffeeScriptCompiler = Rake::Pipeline::Web::Filters::CoffeeScriptCompiler
+describe "CoffeeScriptFilter" do
+  CoffeeScriptFilter = Rake::Pipeline::Web::Filters::CoffeeScriptFilter
 
   let(:coffee_input) { <<-COFFEE }
 x = 1;
@@ -35,7 +35,7 @@ y = ->
   end
 
   it "generates output" do
-    filter = setup_filter CoffeeScriptCompiler.new
+    filter = setup_filter CoffeeScriptFilter.new
 
     filter.output_files.should == [output_file("input.js")]
 
@@ -49,12 +49,12 @@ y = ->
 
   describe "naming output files" do
     it "translates .coffee extensions to .js by default" do
-      filter = setup_filter CoffeeScriptCompiler.new
+      filter = setup_filter CoffeeScriptFilter.new
       filter.output_files.first.path.should == "input.js"
     end
 
     it "accepts a block to customize output file names" do
-      filter = setup_filter(CoffeeScriptCompiler.new { |input| "octopus" })
+      filter = setup_filter(CoffeeScriptFilter.new { |input| "octopus" })
       filter.output_files.first.path.should == "octopus"
     end
   end

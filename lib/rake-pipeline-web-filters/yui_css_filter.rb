@@ -14,9 +14,9 @@ module Rake::Pipeline::Web::Filters
   #
   #     # Compress each CSS file under the app/assets
   #     # directory.
-  #     filter Rake::Pipeline::Web::Filters::YUICssCompressor
+  #     filter Rake::Pipeline::Web::Filters::YUICssFilter
   #   end
-  class YUICssCompressor < Rake::Pipeline::Filter
+  class YUICssFilter < Rake::Pipeline::Filter
     include Rake::Pipeline::Web::Filters::FilterWithDependencies
 
     # @return [Hash] a hash of options to pass to the

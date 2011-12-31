@@ -1,5 +1,5 @@
-describe "YUIJavaScriptCompressor" do
-  YUICompressor = Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor
+describe "YUIJavaScriptFilter" do
+  YUIFilter = Rake::Pipeline::Web::Filters::YUIJavaScriptFilter
 
   let(:js_input) { <<-HERE }
 var name = "Truckasaurus Gates";
@@ -31,7 +31,7 @@ HERE
   end
 
   it "generates output" do
-    filter = setup_filter YUICompressor.new
+    filter = setup_filter YUIFilter.new
 
     filter.output_files.should == [output_file("name.min.js")]
 
@@ -45,18 +45,18 @@ HERE
 
   describe "naming output files" do
     it "translates .js extensions to .min.js by default" do
-      filter = setup_filter YUICompressor.new
+      filter = setup_filter YUIFilter.new
       filter.output_files.first.path.should == "name.min.js"
     end
 
     it "accepts a block to customize output file names" do
-      filter = setup_filter(YUICompressor.new { |input| "octopus" })
+      filter = setup_filter(YUIFilter.new { |input| "octopus" })
       filter.output_files.first.path.should == "octopus"
     end
   end
 
   it "accepts options to pass to the YUI compressor" do
-    filter = setup_filter(YUICompressor.new(:line_break => 0))
+    filter = setup_filter(YUIFilter.new(:line_break => 0))
     filter.input_files = [input_file("name.js", js_input)]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)

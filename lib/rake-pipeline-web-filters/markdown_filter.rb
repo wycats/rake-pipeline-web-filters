@@ -10,10 +10,10 @@ module Rake::Pipeline::Web::Filters
   #
   #     # Compile each .md file under the app/assets
   #     # directory.
-  #     filter Rake::Pipeline::Web::Filters::MarkdownCompiler
+  #     filter Rake::Pipeline::Web::Filters::MarkdownFilter
   #   end
   #
-  class MarkdownCompiler < Rake::Pipeline::Filter
+  class MarkdownFilter < Rake::Pipeline::Filter
 
     # @param [Hash] options options to pass to the markdown
     #   compiler

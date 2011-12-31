@@ -23,7 +23,7 @@ describe "Helpers" do
   describe "#sass" do
     it "creates a SassCompiler" do
       dsl.sass
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::SassCompiler)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::SassFilter)
     end
   end
 
@@ -37,35 +37,35 @@ describe "Helpers" do
   describe "#markdown" do
     it "creates a MarkdownCompiler" do
       dsl.markdown
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::MarkdownCompiler)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::MarkdownFilter)
     end
   end
 
   describe "#cache_buster" do
     it "creates a CacheBuster" do
       dsl.cache_buster
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CacheBuster)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CacheBusterFilter)
     end
   end
 
   describe "#coffee_script" do
     it "creates a CoffeeScriptCompiler" do
       dsl.coffee_script
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CoffeeScriptCompiler)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::CoffeeScriptFilter)
     end
   end
 
   describe "#yui_javascript" do
     it "creates a YUIJavaScriptCompressor" do
       dsl.yui_javascript
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUIJavaScriptCompressor)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUIJavaScriptFilter)
     end
   end
 
   describe "#yui_css" do
     it "creates a YUICssCompressor" do
       dsl.yui_css
-      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUICssCompressor)
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::YUICssFilter)
     end
   end
 
