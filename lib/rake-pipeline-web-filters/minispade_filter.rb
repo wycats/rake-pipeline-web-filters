@@ -41,9 +41,9 @@ module Rake::Pipeline::Web::Filters
       inputs.each do |input|
         code = input.read
         code.gsub!(%r{^\s*require\(}, 'minispade.require(') if @rewrite_requires
-        code = '"use strict"; ' + code if @use_strict
-        function = "function() {#{code}}"
-        ret = "minispade.register('#{@module_id_generator.call(input)}',#{function});"
+        code = %["use strict";\n] + code if @use_strict
+        function = "function() {\n#{code}\n}"
+        ret = "minispade.register('#{@module_id_generator.call(input)}', #{function});\n"
         output.write ret
       end
     end
