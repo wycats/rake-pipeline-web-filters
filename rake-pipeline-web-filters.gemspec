@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Rake::Pipeline::Web::Filters::VERSION
 
   gem.add_dependency "rake-pipeline"
+  gem.add_dependency "rack"
 
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "tilt"
