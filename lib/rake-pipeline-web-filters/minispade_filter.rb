@@ -9,7 +9,7 @@ module Rake::Pipeline::Web::Filters
   #     output "public"
   #
   #     # Wrap each JS file in a minispade.register closure.
-  #     filter Rake::Pipeleine::Web::Filters::MinispadeFilter
+  #     filter Rake::Pipeline::Web::Filters::MinispadeFilter
   #   end
   class MinispadeFilter < Rake::Pipeline::Filter
 
