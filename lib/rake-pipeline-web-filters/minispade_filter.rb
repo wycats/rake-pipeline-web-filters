@@ -20,12 +20,16 @@ module Rake::Pipeline::Web::Filters
     #   the minispade module id.
     # @option options [Boolean] :rewrite_requires If true, change calls to
     #   +require+ in the source to +minispade.require+.
+    # @option options [Boolean] :string If true, compiles the output as
+    #   a String instead of a closure. This means that @sourceURL can be
+    #   appended for good stack traces and debugging.
     def initialize(options = {})
       super()
-      @use_strict = !!options[:use_strict]
+      @use_strict = options[:use_strict]
       @module_id_generator = options[:module_id_generator] ||
         proc { |input| input.fullpath.sub(Dir.pwd, '') }
-      @rewrite_requires = !!options[:rewrite_requires]
+      @rewrite_requires = options[:rewrite_requires]
+      @string_module = options[:string]
     end
 
     # Implement the {#generate_output} method required by
@@ -42,8 +46,15 @@ module Rake::Pipeline::Web::Filters
         code = input.read
         code.gsub!(%r{^\s*require\(}, 'minispade.require(') if @rewrite_requires
         code = %["use strict";\n] + code if @use_strict
-        function = "function() {\n#{code}\n}"
-        ret = "minispade.register('#{@module_id_generator.call(input)}', #{function});\n"
+
+        module_id = @module_id_generator.call(input)
+
+        if @string_module
+          contents = %{#{code}\n//@ sourceURL=\"#{module_id}\"}.to_json
+        else
+          contents = "function() {\n#{code}\n}"
+        end
+        ret = "minispade.register('#{module_id}', #{contents});\n"
         output.write ret
       end
     end
