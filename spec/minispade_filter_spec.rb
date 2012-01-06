@@ -41,7 +41,7 @@ describe "MinispadeFilter" do
   it "compiles a string if asked" do
     filter = make_filter(input_file, :string => true)
     output_file.body.should ==
-      %{minispade.register('/path/to/input/foo.js', "var foo = 'bar';\\n//@ sourceURL=\\"/path/to/input/foo.js\\"");\n}
+      %{minispade.register('/path/to/input/foo.js', "var foo = 'bar';\\n//@ sourceURL=/path/to/input/foo.js");\n}
   end
 
   it "takes a proc to name the module" do
