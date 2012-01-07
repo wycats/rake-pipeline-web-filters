@@ -4,3 +4,4 @@ source "http://rubygems.org"
 gemspec
 
 gem "rake-pipeline", :git => "git://github.com/livingsocial/rake-pipeline.git"
+gem "pry"

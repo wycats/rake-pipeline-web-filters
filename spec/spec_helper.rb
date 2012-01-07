@@ -1,5 +1,6 @@
 require "rake-pipeline"
 require "rake-pipeline-web-filters"
+require "pry"
 
 class Rake::Pipeline
   module SpecHelpers
