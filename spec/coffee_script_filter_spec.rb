@@ -11,13 +11,10 @@ y = ->
   let(:expected_coffee_output) { <<-HTML }
 (function() {
   var x, y;
-
   x = 1;
-
   y = function() {
     return x += 1;
   };
-
 }).call(this);
   HTML
 
