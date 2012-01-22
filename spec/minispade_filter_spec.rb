@@ -55,4 +55,10 @@ describe "MinispadeFilter" do
     output_file.body.should ==
       "minispade.register('/path/to/input/foo.js', function() {\nminispade.require('octopus');\n});\n"
   end
+
+  it "rewrites requires if asked even spaces wrap tokens in the require statement" do
+    filter = make_filter(input_file("require    ( 'octopus');"), :rewrite_requires => true)
+    output_file.body.should ==
+      "minispade.register('/path/to/input/foo.js', function() {\nminispade.require('octopus');\n});\n"
+  end
 end
