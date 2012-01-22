@@ -44,7 +44,7 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       inputs.each do |input|
         code = input.read
-        code.gsub!(%r{^\s*require\(}, 'minispade.require(') if @rewrite_requires
+        code.gsub!(%r{^\s*require\s*\(\s*}, 'minispade.require(') if @rewrite_requires
         code = %["use strict";\n] + code if @use_strict
 
         module_id = @module_id_generator.call(input)
