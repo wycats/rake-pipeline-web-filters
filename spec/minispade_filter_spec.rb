@@ -50,6 +50,12 @@ describe "MinispadeFilter" do
       "minispade.register('octopus', function() {\nvar foo = 'bar';\n});\n"
   end
 
+  it "resolves relative references if asked" do
+    filter = make_filter(input_file("require('./squid');\nrequire('eel/electric');\nrequire('../whales/humpback')"), :resolve_relative_references => true)
+    output_file.body.should ==
+      "minispade.register('/path/to/input/foo.js', function() {\nrequire('/path/to/input/squid');\nrequire('eel/electric');\nrequire('/path/to/input/../whales/humpback')\n});\n"
+  end
+
   it "rewrites requires if asked" do
     filter = make_filter(input_file("require('octopus');"), :rewrite_requires => true)
     output_file.body.should ==

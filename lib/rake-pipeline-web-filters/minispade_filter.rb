@@ -28,6 +28,7 @@ module Rake::Pipeline::Web::Filters
       @use_strict = options[:use_strict]
       @module_id_generator = options[:module_id_generator] ||
         proc { |input| input.fullpath.sub(Dir.pwd, '') }
+      @resolve_relative_references = options[:resolve_relative_references]
       @rewrite_requires = options[:rewrite_requires]
       @string_module = options[:string]
     end
@@ -44,10 +45,11 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       inputs.each do |input|
         code = input.read
+        module_id = @module_id_generator.call(input)
+
+        code = resolve_relative_references(code, module_id) if @resolve_relative_references
         code.gsub!(%r{^\s*require\(}, 'minispade.require(') if @rewrite_requires
         code = %["use strict";\n] + code if @use_strict
-
-        module_id = @module_id_generator.call(input)
 
         if @string_module
           contents = %{#{code}\n//@ sourceURL=#{module_id}}.to_json
@@ -57,6 +59,16 @@ module Rake::Pipeline::Web::Filters
         ret = "minispade.register('#{module_id}', #{contents});\n"
         output.write ret
       end
+    end
+    
+    def resolve_relative_references(code, module_id)
+      this_dir = File.dirname(module_id)
+      this_dir = (this_dir == '.')? "#{module_id}/": "#{this_dir}/"
+      code.gsub!(%r{^\s*require\s*\(\s*\'\.\/}, "require('#{this_dir}")
+      code.gsub!(%r{^\s*require\s*\(\s*\'\.\.\/}, "require('#{this_dir}../")
+      code.gsub!(%r{^\s*require\s*\(\s*\"\.\/}, %Q|require("#{this_dir}|)
+      code.gsub!(%r{^\s*require\s*\(\s*\"\.\.\/}, %Q|require("#{this_dir}../|)
+      code
     end
   end
 end
