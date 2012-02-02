@@ -5,7 +5,7 @@ module Rake::Pipeline::Web::Filters
   # @example
   #   !!!ruby
   #   Rake::Pipeline.build do
-  #     input "app/assets", "**/*.handlebars"
+  #     input "**/*.handlebars"
   #     output "public"
   #
   #     # Compile each handlebars file to JS
@@ -13,6 +13,9 @@ module Rake::Pipeline::Web::Filters
   #   end
   class HandlebarsFilter < Rake::Pipeline::Filter
 
+    include Rake::Pipeline::Web::Filters::FilterWithDependencies
+
+    # @return [Hash] a hash of options for generate_output
     attr_reader :options
 
     # @param [Hash] options
@@ -31,8 +34,7 @@ module Rake::Pipeline::Web::Filters
       super(&block)
       @options = {
           :target =>'Ember.TEMPLATES',
-          :compile_open => 'Ember.Handlebars.compile(',
-          :compile_close => ');'
+          :wrapper_proc => proc { |source| "Ember.Handlebars.compile(#{source});" }
         }.merge(options)
     end
 
@@ -46,8 +48,14 @@ module Rake::Pipeline::Web::Filters
         source = input.read.to_json
 
         # Write out a JS file, saved to target, wrapped in compiler
-        output.write "\n#{options[:target]}['#{name}']=#{options[:compile_open]}#{source}#{options[:compile_close]}\n"
+        output.write "\n#{options[:target]}['#{name}']=#{options[:wrapper_proc].call(source)}\n"
       end
+    end
+
+    private 
+
+    def external_dependencies
+      [ 'json' ]
     end
   end
 end
