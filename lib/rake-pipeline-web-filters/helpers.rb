@@ -74,6 +74,12 @@ module Rake::Pipeline::Web::Filters
     def less(*args, &block)
       filter(Rake::Pipeline::Web::Filters::LessFilter, *args, &block)
     end
+
+    # Add a new {HandlebarsFilter} to the pipeline.
+    # @see HandlebarsFilter#initialize
+    def handlebars(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
+    end
   end
 end
 
