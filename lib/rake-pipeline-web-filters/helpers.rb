@@ -68,6 +68,12 @@ module Rake::Pipeline::Web::Filters
     def uglify(*args, &block)
       filter(Rake::Pipeline::Web::Filters::UglifyFilter, *args, &block)
     end
+
+    # Add a new {LessFilter} to the pipeline.
+    # @see LessFilter#initialize
+    def less(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::LessFilter, *args, &block)
+    end
   end
 end
 

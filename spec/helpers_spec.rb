@@ -75,4 +75,11 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::UglifyFilter)
     end
   end
+
+  describe "#less" do
+    it "creates a LessFilter" do
+      dsl.less
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::LessFilter)
+    end
+  end
 end
