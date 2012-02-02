@@ -20,11 +20,16 @@ module Rake::Pipeline::Web::Filters
   class LessFilter < Rake::Pipeline::Filter
     include Rake::Pipeline::Web::Filters::FilterWithDependencies
 
+    # @return [Hash] a hash of options to pass to Sass
+    #   when compiling.
+    attr_reader :options
+
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={}, context = nil, &block)
       block ||= proc { |input| input.sub(/\.less$/, '.css') }
       super(&block)
+      @options = options
     end
 
     # Implement the {#generate_output} method required by
@@ -37,8 +42,9 @@ module Rake::Pipeline::Web::Filters
     # @param [FileWrapper] output a single {FileWrapper}
     #   object representing the output.
     def generate_output(inputs, output)
+      parser = Less::Parser.new :paths => Array(options[:additional_load_paths])
       inputs.each do |input|
-        output.write Less::Parser.new.parse(input.read).to_css
+        output.write parser.parse(input.read).to_css
       end
     end
 
