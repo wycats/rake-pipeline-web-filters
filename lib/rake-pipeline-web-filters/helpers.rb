@@ -83,4 +83,4 @@ module Rake::Pipeline::Web::Filters
   end
 end
 
-Rake::Pipeline::DSL.send(:include, Rake::Pipeline::Web::Filters::Helpers)
+Rake::Pipeline::DSL::PipelineDSL.send(:include, Rake::Pipeline::Web::Filters::Helpers)
