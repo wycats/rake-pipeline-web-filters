@@ -38,12 +38,12 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
-        output.write LessJs.compile(input.read)
+        output.write Less::Parser.new.parse(input.read).to_css
       end
     end
 
     def external_dependencies
-      [ 'less-js' ]
+      [ 'less' ]
     end
   end
 end

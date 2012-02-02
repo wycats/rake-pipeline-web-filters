@@ -26,6 +26,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "redcarpet", '~> 2.0'
   gem.add_development_dependency "yui-compressor"
   gem.add_development_dependency "uglifier"
-  gem.add_development_dependency "less-js"
+  gem.add_development_dependency "less"
   gem.add_development_dependency "json"
 end
