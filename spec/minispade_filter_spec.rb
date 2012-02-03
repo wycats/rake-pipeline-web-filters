@@ -29,36 +29,36 @@ describe "MinispadeFilter" do
     filter.output_files.should == output_files
     output_file.encoding.should == "UTF-8"
     output_file.body.should ==
-      "minispade.register('/path/to/input/foo.js', function() {\nvar foo = 'bar';\n});\n"
+      "minispade.register('/path/to/input/foo.js', function() {var foo = 'bar';});"
   end
 
   it "uses strict if asked" do
     filter = make_filter(input_file, :use_strict => true)
     output_file.body.should ==
-      "minispade.register('/path/to/input/foo.js', function() {\n\"use strict\";\nvar foo = 'bar';\n});\n"
+      "minispade.register('/path/to/input/foo.js', function() {\"use strict\";\nvar foo = 'bar';});"
   end
 
   it "compiles a string if asked" do
     filter = make_filter(input_file, :string => true)
     output_file.body.should ==
-      %{minispade.register('/path/to/input/foo.js', "var foo = 'bar';\\n//@ sourceURL=/path/to/input/foo.js");\n}
+      %{minispade.register('/path/to/input/foo.js', "var foo = 'bar';\\n//@ sourceURL=/path/to/input/foo.js");}
   end
 
   it "takes a proc to name the module" do
     filter = make_filter(input_file, :module_id_generator => proc { |input| "octopus" })
     output_file.body.should ==
-      "minispade.register('octopus', function() {\nvar foo = 'bar';\n});\n"
+      "minispade.register('octopus', function() {var foo = 'bar';});"
   end
 
   it "rewrites requires if asked" do
     filter = make_filter(input_file("require('octopus');"), :rewrite_requires => true)
     output_file.body.should ==
-      "minispade.register('/path/to/input/foo.js', function() {\nminispade.require('octopus');\n});\n"
+      "minispade.register('/path/to/input/foo.js', function() {minispade.require('octopus');});"
   end
 
   it "rewrites requires if asked even spaces wrap tokens in the require statement" do
     filter = make_filter(input_file("require    ( 'octopus');"), :rewrite_requires => true)
     output_file.body.should ==
-      "minispade.register('/path/to/input/foo.js', function() {\nminispade.require('octopus');\n});\n"
+      "minispade.register('/path/to/input/foo.js', function() {minispade.require('octopus');});"
   end
 end
