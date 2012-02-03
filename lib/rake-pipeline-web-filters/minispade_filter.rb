@@ -52,9 +52,9 @@ module Rake::Pipeline::Web::Filters
         if @string_module
           contents = %{#{code}\n//@ sourceURL=#{module_id}}.to_json
         else
-          contents = "function() {\n#{code}\n}"
+          contents = "function() {#{code}}"
         end
-        ret = "minispade.register('#{module_id}', #{contents});\n"
+        ret = "minispade.register('#{module_id}', #{contents});"
         output.write ret
       end
     end
