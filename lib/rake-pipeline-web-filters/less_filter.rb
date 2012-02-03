@@ -42,7 +42,7 @@ module Rake::Pipeline::Web::Filters
     # @param [FileWrapper] output a single {FileWrapper}
     #   object representing the output.
     def generate_output(inputs, output)
-      parser = Less::Parser.new :paths => Array(options[:additional_load_paths])
+      parser = Less::Parser.new options
       inputs.each do |input|
         output.write parser.parse(input.read).to_css
       end
