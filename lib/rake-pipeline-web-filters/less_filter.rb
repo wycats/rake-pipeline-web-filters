@@ -20,7 +20,7 @@ module Rake::Pipeline::Web::Filters
   class LessFilter < Rake::Pipeline::Filter
     include Rake::Pipeline::Web::Filters::FilterWithDependencies
 
-    # @return [Hash] a hash of options to pass to Sass
+    # @return [Hash] a hash of options to pass to Less
     #   when compiling.
     attr_reader :options
 
