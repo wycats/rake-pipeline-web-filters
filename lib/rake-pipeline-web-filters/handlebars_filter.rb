@@ -48,7 +48,7 @@ module Rake::Pipeline::Web::Filters
         source = input.read.to_json
 
         # Write out a JS file, saved to target, wrapped in compiler
-        output.write "\n#{options[:target]}['#{name}']=#{options[:wrapper_proc].call(source)}\n"
+        output.write "#{options[:target]}['#{name}']=#{options[:wrapper_proc].call(source)}"
       end
     end
 

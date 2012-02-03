@@ -1,14 +1,13 @@
 describe "HandlebarsFilter" do
   HandlebarsFilter = Rake::Pipeline::Web::Filters::HandlebarsFilter
 
-  let(:handlebars_input) { <<-INPUT }
-<h1 class="title">{{title}}</h1>
-INPUT
+  let(:handlebars_input) {
+    '<h1 class="title">{{title}}</h1>'
+  }
 
-  let(:expected_output) { <<-OUTPUT }
-
-Ember.TEMPLATES['test']=Ember.Handlebars.compile("<h1 class=\\\"title\\\">{{title}}</h1>\\n");
-OUTPUT
+  let(:expected_output) {
+    "Ember.TEMPLATES['test']=Ember.Handlebars.compile(\"<h1 class=\\\"title\\\">{{title}}</h1>\");"
+  }
 
   def input_file(name, content)
     MemoryFileWrapper.new("/path/to/input", name, "UTF-8", content)
