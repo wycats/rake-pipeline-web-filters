@@ -34,8 +34,8 @@ module Rake::Pipeline::Web::Filters
     def initialize(options={}, &block)
       block ||= proc { |input| input.sub(/\.(scss|sass)$/, '.css') }
       super(&block)
-      Compass.add_project_configuration
-      @options = Compass.configuration.to_sass_engine_options
+
+      @options = compass_options
       @options[:load_paths].concat(Array(options.delete(:additional_load_paths)))
       @options.merge!(options)
     end
@@ -59,10 +59,15 @@ module Rake::Pipeline::Web::Filters
       end
     end
 
-    private
+  private
 
     def external_dependencies
       [ 'sass', 'compass' ]
+    end
+
+    def compass_options
+      Compass.add_project_configuration
+      Compass.configuration.to_sass_engine_options
     end
   end
 end
