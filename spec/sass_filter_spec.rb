@@ -17,12 +17,14 @@ $blue: #3bbfce
   border-color: $blue
 SASS
 
-  let(:expected_css_output) { <<-CSS }
-/* line 3 */
+  def expected_css_output(filename)
+    <<-CSS
+/* line 3, /path/to/input/#{filename} */
 .border {
   border-color: #3bbfce;
 }
 CSS
+  end
 
   def input_file(name, content)
     MemoryFileWrapper.new("/path/to/input", name, "UTF-8", content)
@@ -32,9 +34,9 @@ CSS
     MemoryFileWrapper.new("/path/to/output", name, "UTF-8")
   end
 
-  def setup_filter(filter)
+  def setup_filter(filter, input_files=nil)
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("border.scss", scss_input)]
+    filter.input_files = input_files || [input_file("border.scss", scss_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -42,14 +44,13 @@ CSS
 
   it "generates output" do
     filter = setup_filter SassFilter.new
-
     filter.output_files.should == [output_file("border.css")]
 
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output
+    file.body.should == expected_css_output("border.scss")
     file.encoding.should == "UTF-8"
   end
 
@@ -66,21 +67,21 @@ CSS
   end
 
   it "accepts options to pass to the Sass compiler" do
-    filter = setup_filter(SassFilter.new(:syntax => :sass))
-    filter.input_files = [input_file("border.sass_file", sass_input)]
+    input_files = [input_file("border.sass_file", sass_input)]
+    filter = setup_filter(SassFilter.new(:syntax => :sass), input_files)
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.sass_file"]
-    file.body.should == expected_css_output
+    file.body.should == expected_css_output("border.sass_file")
   end
 
   it "compiles files with a .sass extension as sass" do
-    filter = setup_filter(SassFilter.new)
-    filter.input_files = [input_file("border.sass", sass_input)]
+    input_files = [input_file("border.sass", sass_input)]
+    filter = setup_filter(SassFilter.new, input_files)
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output
+    file.body.should == expected_css_output("border.sass")
   end
 
   it "passes Compass's options to the Sass compiler" do
@@ -88,11 +89,11 @@ CSS
       c.preferred_syntax = :sass
     end
 
-    filter = setup_filter(SassFilter.new)
-    filter.input_files = [input_file("border.css", scss_input)]
+    input_files = [input_file("border.css", scss_input)]
+    filter = setup_filter(SassFilter.new, input_files)
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output
+    file.body.should == expected_css_output("border.css")
   end
 end

@@ -50,12 +50,7 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
-        sass_opts = if input.path.match(/\.sass$/)
-          options.merge(:syntax => :sass)
-        else
-          options
-        end
-        output.write Sass.compile(input.read, sass_opts)
+        output.write Sass.compile(input.read, sass_options_for_file(input))
       end
     end
 
@@ -65,9 +60,22 @@ module Rake::Pipeline::Web::Filters
       [ 'sass', 'compass' ]
     end
 
+    # @return the Sass options for the current Compass
+    #   configuration.
     def compass_options
       Compass.add_project_configuration
       Compass.configuration.to_sass_engine_options
+    end
+
+    # @return the Sass options for the given +file+.
+    #   Adds a +:syntax+ option if the filter's options
+    #   don't already include one.
+    def sass_options_for_file(file)
+      added_opts = {
+        :filename => file.fullpath,
+        :syntax => file.path.match(/\.sass$/) ? :sass : :scss
+      }
+      added_opts.merge(@options)
     end
   end
 end
