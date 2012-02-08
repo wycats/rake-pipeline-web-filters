@@ -19,7 +19,7 @@ SASS
 
   def expected_css_output(filename)
     <<-CSS
-/* line 3, /path/to/input/#{filename} */
+/* line 3, #{filename} */
 .border {
   border-color: #3bbfce;
 }
@@ -50,7 +50,7 @@ CSS
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output("border.scss")
+    file.body.should == expected_css_output("/path/to/input/border.scss")
     file.encoding.should == "UTF-8"
   end
 
@@ -72,7 +72,7 @@ CSS
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.sass_file"]
-    file.body.should == expected_css_output("border.sass_file")
+    file.body.should == expected_css_output("/path/to/input/border.sass_file")
   end
 
   it "compiles files with a .sass extension as sass" do
@@ -81,7 +81,7 @@ CSS
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output("border.sass")
+    file.body.should == expected_css_output("/path/to/input/border.sass")
   end
 
   it "passes Compass's options to the Sass compiler" do
@@ -94,6 +94,25 @@ CSS
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
-    file.body.should == expected_css_output("border.css")
+    file.body.should == expected_css_output("/path/to/input/border.css")
+  end
+
+  it "adds @imported files as dependencies of the base file" do
+    inputs = {
+      "base.scss" => '@import "border";',
+      "_border.scss" => scss_input
+    }
+
+    inputs.each do |file, contents|
+      File.open(File.join(tmp, file), "w") { |f| f.write(contents) }
+    end
+
+    filter = SassFilter.new
+    filter.input_files = [Rake::Pipeline::FileWrapper.new(tmp, "base.scss")]
+    filter.output_root = tmp
+    filter.rake_application = Rake::Application.new
+    tasks = filter.generate_rake_tasks
+
+    tasks.first.prerequisites.should include(File.join(tmp, "_border.scss"))
   end
 end

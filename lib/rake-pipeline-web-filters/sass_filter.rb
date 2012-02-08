@@ -40,6 +40,53 @@ module Rake::Pipeline::Web::Filters
       @options.merge!(options)
     end
 
+    # Override {Filter#input_files}.
+    #
+    # We parse each input file with Sass to extract its dependencies,
+    # then add the Sass::Engine (which holds the result of the parse)
+    # to a cache so we don't have to reparse when it comes time to
+    # actually generate the CSS.
+    def input_files=(files)
+      @input_files = []
+      @sass_engines = {}
+
+      files.each do |file|
+        @input_files << file.with_encoding(encoding)
+        engine = Sass::Engine.new(file.read, sass_options_for_file(file))
+        @sass_engines[file] = engine
+      end
+    end
+
+    # @param [FileWrapper] input
+    #   a FileWrapper representing the Sass file whose dependencies
+    #   we're finding
+    # @return [Array<String>]
+    #   a list of the paths that the given Fie
+    def input_dependencies(input)
+      @sass_engines[input].dependencies.map { |dep| dep.options[:filename] }
+    end
+
+    # Generate the Rake tasks for the output files of this filter.
+    #
+    # @see #outputs #outputs (for information on how the output files are determined)
+    # @return [void]
+    def generate_rake_tasks
+      @rake_tasks = outputs.map do |output, inputs|
+        dependencies = []
+
+        inputs.each do |input|
+          dependencies << input.fullpath
+          dependencies += input_dependencies(input)
+        end
+
+        dependencies.each { |path| create_file_task(path) }
+
+        create_file_task(output.fullpath, dependencies) do
+          output.create { generate_output(inputs, output) }
+        end
+      end
+    end
+
     # Implement the {#generate_output} method required by
     # the {Filter} API. Compiles each input file with Sass.
     #
@@ -50,7 +97,7 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
-        output.write Sass.compile(input.read, sass_options_for_file(input))
+        output.write @sass_engines.fetch(input).to_css
       end
     end
 
