@@ -1,5 +1,6 @@
 describe "CoffeeScriptFilter" do
   CoffeeScriptFilter = Rake::Pipeline::Web::Filters::CoffeeScriptFilter
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:coffee_input) { <<-COFFEE }
 x = 1;

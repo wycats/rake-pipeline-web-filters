@@ -1,5 +1,4 @@
 describe "CacheBusterFilter" do
-
   MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
   CacheBusterFilter = Rake::Pipeline::Web::Filters::CacheBusterFilter
 

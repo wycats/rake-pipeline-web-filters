@@ -1,4 +1,7 @@
+require "json"
+
 describe "MinispadeFilter" do
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   def input_file(contents="var foo = 'bar';", path="/path/to/input", name="foo.js")
     MemoryFileWrapper.new(path, name, "UTF-8", contents)

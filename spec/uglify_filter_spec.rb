@@ -1,5 +1,6 @@
 describe "UglifyFilter" do
   UglifyFilter = Rake::Pipeline::Web::Filters::UglifyFilter
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:js_input) { <<-HERE }
 var name = "Truckasaurus Gates";

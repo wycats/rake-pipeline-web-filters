@@ -1,5 +1,6 @@
 describe "LessFilter" do
   LessFilter = Rake::Pipeline::Web::Filters::LessFilter
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:less_input) { <<-SCSS }
 @blue: #3bbfce;

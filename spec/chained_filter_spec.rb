@@ -1,5 +1,4 @@
 describe "ChainedFilter" do
-
   MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
   ChainedFilter = Rake::Pipeline::Web::Filters::ChainedFilter
 

@@ -1,4 +1,6 @@
 describe "TiltFilter" do
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+
   let(:input_files) {
     [
       MemoryFileWrapper.new("/path/to/input", "foo.erb", "UTF-8", "<%= 'foo' %>\n"),

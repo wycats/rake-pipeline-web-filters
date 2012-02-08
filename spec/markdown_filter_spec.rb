@@ -1,5 +1,6 @@
 describe "MarkdownFilter" do
   MarkdownFilter = Rake::Pipeline::Web::Filters::MarkdownFilter
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:markdown_input) { <<-MARKDOWN }
 ## This is an H2

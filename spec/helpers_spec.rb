@@ -1,6 +1,7 @@
 require "rake-pipeline-web-filters/helpers"
 
 describe "Helpers" do
+  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:pipeline) { Rake::Pipeline.new }
   let(:dsl) { Rake::Pipeline::DSL.new(pipeline) }
