@@ -1,6 +1,6 @@
 describe "CacheBusterFilter" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
-  CacheBusterFilter = Rake::Pipeline::Web::Filters::CacheBusterFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  CacheBusterFilter ||= Rake::Pipeline::Web::Filters::CacheBusterFilter
 
   let(:content) { "it doesn't matter" }
 

@@ -1,6 +1,6 @@
 describe "YUIJavaScriptFilter" do
-  YUIFilter = Rake::Pipeline::Web::Filters::YUIJavaScriptFilter
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  YUIFilter ||= Rake::Pipeline::Web::Filters::YUIJavaScriptFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:js_input) { <<-HERE }
 var name = "Truckasaurus Gates";

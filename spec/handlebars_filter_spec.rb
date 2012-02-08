@@ -1,6 +1,6 @@
 describe "HandlebarsFilter" do
-  HandlebarsFilter = Rake::Pipeline::Web::Filters::HandlebarsFilter
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  HandlebarsFilter ||= Rake::Pipeline::Web::Filters::HandlebarsFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:handlebars_input) {
     '<h1 class="title">{{title}}</h1>'

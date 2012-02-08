@@ -1,6 +1,6 @@
 describe "YUICssFilter" do
-  YUICssFilter = Rake::Pipeline::Web::Filters::YUICssFilter
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  YUICssFilter ||= Rake::Pipeline::Web::Filters::YUICssFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:css_input) { <<-HERE }
 div.error {

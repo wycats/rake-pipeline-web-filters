@@ -1,6 +1,6 @@
 describe "ChainedFilter" do
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
-  ChainedFilter = Rake::Pipeline::Web::Filters::ChainedFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  ChainedFilter ||= Rake::Pipeline::Web::Filters::ChainedFilter
 
   input_file1 = MemoryFileWrapper.new("/path", "input.js.strip_asserts.erb", "UTF-8", <<-CONTENT)
 assert("must be true", true);

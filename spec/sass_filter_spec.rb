@@ -1,6 +1,6 @@
 describe "SassFilter" do
-  SassFilter = Rake::Pipeline::Web::Filters::SassFilter
-  MemoryFileWrapper = Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  SassFilter ||= Rake::Pipeline::Web::Filters::SassFilter
+  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   let(:scss_input) { <<-SCSS }
 $blue: #3bbfce;
