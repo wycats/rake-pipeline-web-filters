@@ -8,11 +8,11 @@ console.log(name);
 HERE
 
   let(:expected_js_output) {
-    'var name="Truckasaurus Gates";console.log(name)'
+    'var name="Truckasaurus Gates";console.log(name);'
   }
 
   let(:expected_beautiful_js_output) {
-    %[var name = "Truckasaurus Gates";\n\nconsole.log(name);]
+    %[var name = "Truckasaurus Gates";\n\nconsole.log(name);;]
   }
 
   def input_file(name, content)
