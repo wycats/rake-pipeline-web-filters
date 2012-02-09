@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Rake::Pipeline::Web::Filters::VERSION
 
-  gem.add_dependency "rake-pipeline"
+  gem.add_dependency "rake-pipeline", "~> 0.6"
   gem.add_dependency "rack"
 
   gem.add_development_dependency "rspec"
