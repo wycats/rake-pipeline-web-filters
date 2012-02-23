@@ -34,7 +34,8 @@ module Rake::Pipeline::Web::Filters
       super(&block)
       @options = {
           :target =>'Ember.TEMPLATES',
-          :wrapper_proc => proc { |source| "Ember.Handlebars.compile(#{source});" }
+          :wrapper_proc => proc { |source| "Ember.Handlebars.compile(#{source});" },
+          :key_name_proc => proc { |input| File.basename(input.path, File.extname(input.path)) }
         }.merge(options)
     end
 
@@ -42,7 +43,7 @@ module Rake::Pipeline::Web::Filters
 
       inputs.each do |input|
         # The name of the template is the filename, sans extension
-        name = File.basename(input.path, File.extname(input.path))
+        name = options[:key_name_proc].call(input)
 
         # Read the file and escape it so it's a valid JS string
         source = input.read.to_json
