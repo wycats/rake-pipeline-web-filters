@@ -23,7 +23,7 @@ module Rake::Pipeline::Web::Filters
 
     # @return [Hash] a hash of options to pass to Sass
     #   when compiling.
-    attr_reader :options
+    attr_reader :options, :additional_load_paths
 
     # @param [Hash] options options to pass to the Sass
     #   compiler
@@ -36,7 +36,8 @@ module Rake::Pipeline::Web::Filters
       super(&block)
 
       @options = compass_options
-      @options[:load_paths].concat(Array(options.delete(:additional_load_paths)))
+      @additional_load_paths = Array(options.delete(:additional_load_paths))
+      @options[:load_paths].concat(@additional_load_paths)
       @options.merge!(options)
     end
 
@@ -54,7 +55,21 @@ module Rake::Pipeline::Web::Filters
       end
     end
 
+    # @return [String] array of file paths within additional load paths
+    def additional_file_paths
+      additional_load_paths.map do |path|
+        path += "/" unless path.end_with?("/")
+        Dir.glob(path + "**/*")
+      end.flatten
+    end
+
   private
+
+    # Make sure that files within additional load paths are watched for changes
+    def create_file_task(output, deps=[], &block)
+      deps.concat(additional_file_paths)
+      super(output, deps, &block)
+    end
 
     def external_dependencies
       [ 'sass', 'compass' ]
