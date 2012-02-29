@@ -63,13 +63,23 @@ module Rake::Pipeline::Web::Filters
       end.flatten
     end
 
-  private
-
+    # Overwritten method from rake-pipeline
+    #
     # Make sure that files within additional load paths are watched for changes
-    def create_file_task(output, deps=[], &block)
-      deps.concat(additional_file_paths)
-      super(output, deps, &block)
+    # @return [void]
+    def generate_rake_tasks
+      @rake_tasks = outputs.map do |output, inputs|
+        dependencies = inputs.map(&:fullpath) + additional_file_paths
+
+        dependencies.each { |path| create_file_task(path) }
+
+        create_file_task(output.fullpath, dependencies) do
+          output.create { generate_output(inputs, output) }
+        end
+      end
     end
+
+  private
 
     def external_dependencies
       [ 'sass', 'compass' ]
