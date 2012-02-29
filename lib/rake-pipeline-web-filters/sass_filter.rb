@@ -23,7 +23,7 @@ module Rake::Pipeline::Web::Filters
 
     # @return [Hash] a hash of options to pass to Sass
     #   when compiling.
-    attr_reader :options
+    attr_reader :options, :additional_load_paths
 
     # @param [Hash] options options to pass to the Sass
     #   compiler
@@ -36,7 +36,8 @@ module Rake::Pipeline::Web::Filters
       super(&block)
 
       @options = compass_options
-      @options[:load_paths].concat(Array(options.delete(:additional_load_paths)))
+      @additional_load_paths = Array(options.delete(:additional_load_paths))
+      @options[:load_paths].concat(@additional_load_paths)
       @options.merge!(options)
     end
 
@@ -51,6 +52,30 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       inputs.each do |input|
         output.write Sass.compile(input.read, sass_options_for_file(input))
+      end
+    end
+
+    # @return [String] array of file paths within additional load paths
+    def additional_file_paths
+      additional_load_paths.map do |path|
+        path += "/" unless path.end_with?("/")
+        Dir.glob(path + "**/*")
+      end.flatten
+    end
+
+    # Overwritten method from rake-pipeline
+    #
+    # Make sure that files within additional load paths are watched for changes
+    # @return [void]
+    def generate_rake_tasks
+      @rake_tasks = outputs.map do |output, inputs|
+        dependencies = inputs.map(&:fullpath) + additional_file_paths
+
+        dependencies.each { |path| create_file_task(path) }
+
+        create_file_task(output.fullpath, dependencies) do
+          output.create { generate_output(inputs, output) }
+        end
       end
     end
 
