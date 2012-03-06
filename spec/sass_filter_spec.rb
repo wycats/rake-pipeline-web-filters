@@ -96,4 +96,59 @@ CSS
     file = MemoryFileWrapper.files["/path/to/output/border.css"]
     file.body.should == expected_css_output("border.css")
   end
+
+  it "generates rake tasks for files within additional load path" do
+    touch_p("additional/styles.css")
+    filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
+
+    tasks = filter.generate_rake_tasks
+
+    prerequisite_names = tasks.first.prerequisite_tasks.map { |p| p.name }
+
+    prerequisite_names.should include("additional/styles.css")
+  end
+
+  describe "additional load paths" do
+    it "is empty by default" do
+      filter = setup_filter(SassFilter.new)
+      filter.additional_load_paths == []
+    end
+
+    it "transforms to array" do
+      filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
+      filter.additional_load_paths == ["additional"]
+    end
+
+    it "accepts array" do
+      filter = setup_filter(SassFilter.new(:additional_load_paths => ["additional", "extra"]))
+      filter.additional_load_paths == ["additional", "extra"]
+    end
+  end
+
+  describe "additional file paths" do
+    it "includes all nested files" do
+      touch_p("additional/styles.css")
+      touch_p("additional/nested/styles.css")
+      filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
+
+      filter.additional_file_paths.should include("additional/styles.css")
+      filter.additional_file_paths.should include("additional/nested/styles.css")
+    end
+
+    it "works with tralling slash" do
+      touch_p("additional/nested/styles.css")
+      filter = setup_filter(SassFilter.new(:additional_load_paths => "additional/"))
+
+      filter.additional_file_paths.should include("additional/nested/styles.css")
+    end
+
+    it "includes files from different load paths" do
+      touch_p("additional/styles.css")
+      touch_p("extra/styles.css")
+      filter = setup_filter(SassFilter.new(:additional_load_paths => ["additional", "extra"]))
+
+      filter.additional_file_paths.should include("additional/styles.css")
+      filter.additional_file_paths.should include("extra/styles.css")
+    end
+  end
 end
