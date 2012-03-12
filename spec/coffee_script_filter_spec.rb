@@ -22,6 +22,16 @@ y = ->
 }).call(this);
   HTML
 
+  let(:expected_unwrapped_coffee_output) { <<-HTML }
+var x, y;
+
+x = 1;
+
+y = function() {
+  return x += 1;
+};
+  HTML
+
   def input_file(name, content)
     MemoryFileWrapper.new("/path/to/input", name, "UTF-8", content)
   end
@@ -48,6 +58,19 @@ y = ->
 
     file = MemoryFileWrapper.files["/path/to/output/input.js"]
     file.body.should == expected_coffee_output
+    file.encoding.should == "UTF-8"
+  end
+
+  it "generates unwrapped output" do
+    filter = setup_filter CoffeeScriptFilter.new(:no_wrap => true)
+
+    filter.output_files.should == [output_file("input.js")]
+
+    tasks = filter.generate_rake_tasks
+    tasks.each(&:invoke)
+
+    file = MemoryFileWrapper.files["/path/to/output/input.js"]
+    file.body.should == expected_unwrapped_coffee_output
     file.encoding.should == "UTF-8"
   end
 
