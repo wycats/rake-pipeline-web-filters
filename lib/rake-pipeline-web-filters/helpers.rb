@@ -47,8 +47,8 @@ module Rake::Pipeline::Web::Filters
 
     # Add a new {CoffeeScriptFilter} to the pipeline.
     # @see CoffeeScriptFilter#initialize
-    def coffee_script(&block)
-      filter(Rake::Pipeline::Web::Filters::CoffeeScriptFilter, &block)
+    def coffee_script(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::CoffeeScriptFilter, *args, &block)
     end
 
     # Add a new {YUIJavaScriptFilter} to the pipeline.
