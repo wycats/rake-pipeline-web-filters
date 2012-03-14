@@ -85,5 +85,22 @@ y = function() {
       filter.output_files.first.path.should == "octopus"
     end
   end
+
+  describe "invalid input" do
+    let(:coffee_input) { <<-COFFEE }
+y = function(){
+  return "whoops there javascript in here!"
+}
+    COFFEE
+
+    it "has a useful error message including the input file name" do
+      filter = setup_filter CoffeeScriptFilter.new
+      tasks = filter.generate_rake_tasks
+      lambda {
+        tasks.each(&:invoke)
+      }.should raise_error(ExecJS::RuntimeError, "Error compiling input.coffee. reserved word \"function\" on line 1")
+    end
+  end
+
 end
 

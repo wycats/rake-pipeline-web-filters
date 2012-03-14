@@ -26,7 +26,11 @@ module Rake::Pipeline::Web::Filters
     # @param [FileWrapper] output a FileWrapper object
     def generate_output(inputs, output)
       inputs.each do |input|
-        output.write CoffeeScript.compile(input, options)
+        begin
+          output.write CoffeeScript.compile(input, options)
+        rescue ExecJS::Error => error
+          raise error, "Error compiling #{input.path}. #{error.message}"
+        end
       end
     end
 
