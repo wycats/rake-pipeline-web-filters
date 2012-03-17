@@ -63,6 +63,12 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::YUICssFilter, *args, &block)
     end
 
+    # Add a new {GzipFilter} to the pipeline.
+    # @see GzipFilter#initialize
+    def gzip(&block)
+      filter(Rake::Pipeline::Web::Filters::GzipFilter, &block)
+    end
+
     # Add a new {UglifyFilter} to the pipeline.
     # @see UglifyFilter#initialize
     def uglify(*args, &block)
