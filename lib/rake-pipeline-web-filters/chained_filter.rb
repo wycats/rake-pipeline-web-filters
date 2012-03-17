@@ -1,4 +1,8 @@
 module Rake::Pipeline::Web::Filters
+  # Implement the FileWrapper API. Because filters are defined
+  # in terms of the FileWrapper API, we can implement an
+  # alternative that doesn't write to disk but still utilizes
+  # the same filter definitions.
   class MemoryFileWrapper < Struct.new(:root, :path, :encoding, :body)
     def with_encoding(new_encoding)
       self.class.new(root, path, new_encoding, body)
@@ -20,7 +24,35 @@ module Rake::Pipeline::Web::Filters
     end
   end
 
+  # The purpose of ChainedFilter is to enable filters to
+  # be applied to files based upon their file extensions.
+  #
+  # Filters are applied repeatedly to files for each
+  # extension.
+  #
+  # @example
+  #
+  #   filter ChainedFilter, :types => {
+  #     :erb => ErbFilter,
+  #     :coffee => CoffeeFilter,
+  #     :scss => ScssFilter
+  #   }
+  #
+  # In this example, files with the extensions +erb+,
+  # +coffee+, and +scss+ will be processed using the
+  # specified filters. If a file has multiple extensions,
+  # all of the filters will be applied.
+  #
+  # For example, with the above filter specification,
+  # a file like +application.js.coffee.erb+ will first
+  # apply the +ErbFilter+, then the +CoffeeFilter+, and
+  # then output +application.js+.
   class ChainedFilter < Rake::Pipeline::Filter
+    # @param [Hash] options
+    # @option options [Hash] :types
+    #   A hash of file extensions and their associated
+    #   filters. See the class description for more
+    #   information.
     def initialize(options={}, &block)
       @filters = options[:types]
 
@@ -35,12 +67,19 @@ module Rake::Pipeline::Web::Filters
       super(&block)
     end
 
+    # @private
+    #
+    # Implement +generate_output+
     def generate_output(inputs, output)
       inputs.each do |input|
         output.write process_filters(input)
       end
     end
 
+    # @private
+    #
+    # Process an input file by applying the filter for each
+    # extension in the file.
     def process_filters(input)
       keys = input.path.match(@pattern)[0].scan(/(?<=\.)\w+/)
 
@@ -55,6 +94,9 @@ module Rake::Pipeline::Web::Filters
       input.read
     end
 
+    # @private
+    #
+    # Process an individual file with a filter.
     def process_with_filter(input, filter_class)
       filter = filter_class.new
 
