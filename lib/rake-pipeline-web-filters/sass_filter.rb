@@ -55,28 +55,13 @@ module Rake::Pipeline::Web::Filters
       end
     end
 
-    # @return [String] array of file paths within additional load paths
-    def additional_file_paths
+    # @param [FileWrapper] file wrapper to get paths for
+    # @return [Array<String>] array of file paths within additional dependencies
+    def additional_dependencies(input=nil)
       additional_load_paths.map do |path|
         path += "/" unless path.end_with?("/")
         Dir.glob(path + "**/*")
       end.flatten
-    end
-
-    # Overwritten method from rake-pipeline
-    #
-    # Make sure that files within additional load paths are watched for changes
-    # @return [void]
-    def generate_rake_tasks
-      @rake_tasks = outputs.map do |output, inputs|
-        dependencies = inputs.map(&:fullpath) + additional_file_paths
-
-        dependencies.each { |path| create_file_task(path) }
-
-        create_file_task(output.fullpath, dependencies) do
-          output.create { generate_output(inputs, output) }
-        end
-      end
     end
 
   private

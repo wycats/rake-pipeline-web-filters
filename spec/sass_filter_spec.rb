@@ -131,15 +131,15 @@ CSS
       touch_p("additional/nested/styles.css")
       filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
 
-      filter.additional_file_paths.should include("additional/styles.css")
-      filter.additional_file_paths.should include("additional/nested/styles.css")
+      filter.additional_dependencies.should include("additional/styles.css")
+      filter.additional_dependencies.should include("additional/nested/styles.css")
     end
 
     it "works with tralling slash" do
       touch_p("additional/nested/styles.css")
       filter = setup_filter(SassFilter.new(:additional_load_paths => "additional/"))
 
-      filter.additional_file_paths.should include("additional/nested/styles.css")
+      filter.additional_dependencies.should include("additional/nested/styles.css")
     end
 
     it "includes files from different load paths" do
@@ -147,8 +147,8 @@ CSS
       touch_p("extra/styles.css")
       filter = setup_filter(SassFilter.new(:additional_load_paths => ["additional", "extra"]))
 
-      filter.additional_file_paths.should include("additional/styles.css")
-      filter.additional_file_paths.should include("extra/styles.css")
+      filter.additional_dependencies.should include("additional/styles.css")
+      filter.additional_dependencies.should include("extra/styles.css")
     end
   end
 end
