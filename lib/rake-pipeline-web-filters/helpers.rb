@@ -20,6 +20,12 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::MinispadeFilter, *args, &block)
     end
 
+    # Add a new {NeuterFilter} to the pipeline.
+    # @see NeuterFilter#initialize
+    def neuter(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::NeuterFilter, *args, &block)
+    end
+
     # Add a new {SassFilter} to the pipeline.
     # @see SassFilter#initialize
     def sass(*args, &block)
