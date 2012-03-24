@@ -47,7 +47,14 @@ module Rake::Pipeline::Web::Filters
   # a file like +application.js.coffee.erb+ will first
   # apply the +ErbFilter+, then the +CoffeeFilter+, and
   # then output +application.js+.
+  #
+  # This filter is largely designed for use with the
+  # {ProjectHelpers#register register} helper, which
+  # will transparently add a ChainedFilter before each
+  # input block with the registered extensions.
   class ChainedFilter < Rake::Pipeline::Filter
+    attr_reader :filters
+
     # @param [Hash] options
     # @option options [Hash] :types
     #   A hash of file extensions and their associated

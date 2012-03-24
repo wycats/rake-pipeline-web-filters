@@ -13,7 +13,7 @@ module Rake::Pipeline::Web::Filters
   #   match("*.scss") do
   #     sass :syntax => :sass
   #   end
-  module Helpers
+  module PipelineHelpers
     # Add a new {MinispadeFilter} to the pipeline.
     # @see MinispadeFilter#initialize
     def minispade(*args, &block)
@@ -81,6 +81,28 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
     end
   end
+
+  module ProjectHelpers
+    # Register a filter class for a particular file extension
+    # and add a ChainedFilter as a before filter.
+    #
+    # If this is the first use of +register+, it will set up
+    # the before filter. Subsequent uses will just update the
+    # types hash.
+    #
+    # @see ChainedFilter
+    def register(extension, klass)
+      if @types_hash
+        @types_hash[extension] = klass
+      else
+        @types_hash = { extension => klass }
+        before_filter ChainedFilter, { :types => @types_hash }
+      end
+    end
+  end
 end
 
-Rake::Pipeline::DSL::PipelineDSL.send(:include, Rake::Pipeline::Web::Filters::Helpers)
+require "rake-pipeline/dsl"
+
+Rake::Pipeline::DSL::PipelineDSL.send(:include, Rake::Pipeline::Web::Filters::PipelineHelpers)
+Rake::Pipeline::DSL::ProjectDSL.send(:include, Rake::Pipeline::Web::Filters::ProjectHelpers)

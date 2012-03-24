@@ -40,6 +40,10 @@ y = function() {
     MemoryFileWrapper.new("/path/to/output", name, "UTF-8")
   end
 
+  def should_match(expected, output)
+    "#{expected}\n".gsub(/\n+/, "\n").should == "#{output}\n".gsub(/\n+/, "\n")
+  end
+
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
     filter.input_files = [input_file("input.coffee", coffee_input)]
@@ -57,7 +61,7 @@ y = function() {
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/input.js"]
-    file.body.should == expected_coffee_output
+    should_match file.body, expected_coffee_output
     file.encoding.should == "UTF-8"
   end
 
@@ -70,7 +74,7 @@ y = function() {
     tasks.each(&:invoke)
 
     file = MemoryFileWrapper.files["/path/to/output/input.js"]
-    file.body.should == expected_unwrapped_coffee_output
+    should_match file.body, expected_unwrapped_coffee_output
     file.encoding.should == "UTF-8"
   end
 
@@ -98,7 +102,7 @@ y = function(){
       tasks = filter.generate_rake_tasks
       lambda {
         tasks.each(&:invoke)
-      }.should raise_error(ExecJS::RuntimeError, "Error compiling input.coffee. reserved word \"function\" on line 1")
+      }.should raise_error(ExecJS::RuntimeError, /Error compiling input.coffee. reserved word "function" on line 1/i)
     end
   end
 

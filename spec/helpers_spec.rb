@@ -90,3 +90,35 @@ describe "Helpers" do
     end
   end
 end
+
+describe "ProjectHelpers" do
+  def project
+    @project ||= Rake::Pipeline::Project.new
+  end
+
+  def dsl
+    @dsl ||= Rake::Pipeline::DSL::ProjectDSL.new(project)
+  end
+
+  describe "register" do
+    it "registers filters per file name" do
+      dsl.register :coffee, Rake::Pipeline::Web::Filters::CoffeeScriptFilter
+      dsl.register :handlebars, Rake::Pipeline::Web::Filters::HandlebarsFilter
+
+      dsl.input "lib" do
+        concat "lib.js"
+      end
+
+      dsl.input "tests" do
+        concat "tests.js"
+      end
+
+      project.pipelines.size.should == 2
+
+      project.pipelines.each do |pipeline|
+        pipeline.filters.first.should be_kind_of Rake::Pipeline::Web::Filters::ChainedFilter
+        pipeline.filters.first.filters.keys.should == [:coffee, :handlebars]
+      end
+    end
+  end
+end
