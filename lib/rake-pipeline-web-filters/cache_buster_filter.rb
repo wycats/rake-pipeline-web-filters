@@ -25,7 +25,8 @@ module Rake::Pipeline::Web::Filters
       key_generator ||= DEFAULT_KEY_GENERATOR
       output_name_generator = proc { |path, file|
         parts = path.split('.')
-        parts[0] << "-#{key_generator.call(file)}"
+        index_to_modify = parts.length > 1 ? -2 : -1
+        parts[index_to_modify] << "-#{key_generator.call(file)}"
         parts.join('.')
       }
       super(&output_name_generator)

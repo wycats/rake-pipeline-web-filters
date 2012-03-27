@@ -69,4 +69,37 @@ describe "CacheBusterFilter" do
     end
 
   end
+
+  describe 'for an input file with multiple dots' do
+    let(:input_file) {
+      MemoryFileWrapper.new '/path/to/input', 'my.text.file.txt', 'UTF-8', content
+    }
+
+    let(:output_file) {
+      MemoryFileWrapper.new output_root, "my.text.file-foo.txt", 'UTF-8'
+    }
+
+    subject { setup_filter(CacheBusterFilter.new() { 'foo' }) }
+
+    it 'appends the busting key to the penultimate part' do
+      subject.output_files.should == [ output_file ]
+    end
+  end
+
+  describe 'for an input file with no dots' do
+    let(:input_file) {
+      MemoryFileWrapper.new '/path/to/input', 'my_text_file', 'UTF-8', content
+    }
+
+    let(:output_file) {
+      MemoryFileWrapper.new output_root, "my_text_file-foo", 'UTF-8'
+    }
+
+    subject { setup_filter(CacheBusterFilter.new() { 'foo' }) }
+
+    it 'appends the busting key to the end of the filename' do
+      subject.output_files.should == [ output_file ]
+    end
+  end
+
 end
