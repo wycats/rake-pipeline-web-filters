@@ -27,7 +27,14 @@ module Rake::Pipeline::Web::Filters
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={}, &block)
-      block ||= proc { |input| input.sub(/\.js$/, '.min.js') }
+      block ||= proc { |input| 
+        if input =~ %r{min.js$}
+          input
+        else
+          input.sub(/\.js$/, '.min.js')
+        end
+      }
+
       super(&block)
       @options = options
     end
@@ -42,7 +49,11 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
-        output.write Uglifier.compile(input.read, options)
+        if input.path =~ %r{min.js$}
+          output.write input.read
+        else
+          output.write Uglifier.compile(input.read, options)
+        end
       end
     end
 
