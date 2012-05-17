@@ -86,6 +86,12 @@ module Rake::Pipeline::Web::Filters
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
     end
+
+    # Add a new {TiltYieldingFilter} to the pipeline.
+    # @see TiltYieldingFilter#initialize
+    def tilt_yielding(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::TiltYieldingFilter, *args, &block)
+    end
   end
 
   module ProjectHelpers

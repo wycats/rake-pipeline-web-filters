@@ -82,11 +82,17 @@ describe "Helpers" do
     end
   end
 
-
   describe "#handlebars" do
     it "creates a HandlebarsFilter" do
       dsl.handlebars
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
+    end
+  end
+
+  describe "#tilt_yielding" do
+    it "creates a TiltYieldingFilter" do
+      dsl.tilt_yielding
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::TiltYieldingFilter)
     end
   end
 end
