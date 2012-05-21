@@ -18,9 +18,9 @@ describe "HandlebarsFilter" do
     MemoryFileWrapper.new("/path/to/output", name, "UTF-8")
   end
 
-  def setup_filter(filter)
+  def setup_filter(filter, input_filename = "test.handlebars")
     filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("test.handlebars", handlebars_input)]
+    filter.input_files = [input_file(input_filename, handlebars_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
     filter
@@ -41,7 +41,12 @@ describe "HandlebarsFilter" do
 
   describe "naming output files" do
     it "translates .handlebars extensions to .js by default" do
-      filter = setup_filter HandlebarsFilter.new
+      filter = setup_filter HandlebarsFilter.new, "test.handlebars"
+      filter.output_files.first.path.should == "test.js"
+    end
+
+    it "translates .hbs extensions to .js by default" do
+      filter = setup_filter HandlebarsFilter.new, "test.hbs"
       filter.output_files.first.path.should == "test.js"
     end
 
