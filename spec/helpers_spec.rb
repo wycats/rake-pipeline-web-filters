@@ -82,6 +82,12 @@ describe "Helpers" do
     end
   end
 
+  describe "#gzip" do
+    it "creates a GzipFilter" do
+      dsl.gzip
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::GzipFilter)
+    end
+  end
 
   describe "#handlebars" do
     it "creates a HandlebarsFilter" do
