@@ -95,6 +95,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
     end
   end
+
+  describe "#roy" do
+    it "creates a RoyFilter" do
+      dsl.roy
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::RoyFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do

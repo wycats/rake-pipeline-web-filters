@@ -92,6 +92,12 @@ module Rake::Pipeline::Web::Filters
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
     end
+
+    # Add a new {RoyFilter} to the pipeline.
+    # @see RoyFilter#initialize
+    def roy(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::RoyFilter, *args, &block)
+    end
   end
 
   module ProjectHelpers
