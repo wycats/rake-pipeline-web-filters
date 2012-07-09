@@ -22,10 +22,10 @@ EOF
   
   # not using heredoc as it adds an extra \n to the end
   let(:expected_ember_i18n_js) {
-    "var EmberI18n = { set_locale : function(locale) {\n                                        strings = this[locale]\n                                        if(strings) { Ember.STRINGS = strings }\n                                      },\n                                      'en': { 'foo' : 'bar','hoge' : 'hoge' },'ja': { 'foo' : 'バー','hoge' : 'ホゲ' }\n      };"
+  "EmberI18n = EmberI18n || {};EmberI18n['en'] = { 'foo' : 'bar','hoge' : 'hoge' };EmberI18n['ja'] = { 'foo' : 'バー','hoge' : 'ホゲ' };"
   }
   let(:expected_i18n_js) {
-    'window.i18n.translations = {"en":{"foo":"bar","hoge":"hoge"},"ja":{"foo":"バー","hoge":"ホゲ"}}'
+  "I18n.translations = I18n.translations || {};I18n.translations['en'] = {\"foo\":\"bar\",\"hoge\":\"hoge\"};I18n.translations['ja'] = {\"foo\":\"バー\",\"hoge\":\"ホゲ\"};"
   }
   def input_file(name, content)
     MemoryFileWrapper.new('/path/to/input', name, 'UTF-8', content)

@@ -28,6 +28,7 @@ module Rake::Pipeline::Web::Filters
     # @note i18n.js is not included, only the translations that 
     #       can be used by i18n.js
     # @see https://github.com/fnando/i18n-js
+    # @see http://docs.emberjs.com/symbols/Ember.String.html#method=.loc
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={}, &block)
@@ -39,55 +40,55 @@ module Rake::Pipeline::Web::Filters
     # Implement the {#generate_output} method required by
     # the {Filter} API. Generates javascript from i18n yaml files
     # appropriate for Ember#String#loc
-   # @param [Array<FileWrapper>] inputs an Array of
+    # @param [Array<FileWrapper>] inputs an Array of
     #   {FileWrapper} objects representing the inputs to
     #   this filter.
     # @param [FileWrapper] output a single {FileWrapper}
     #   object representing the output.
     def generate_output(inputs, output)
-      if @options[:use_i18n_js]
-          output.write i18n_js_output(inputs)
+      if @options[:use_i18n_js] == true
+        output.write i18n_js_output(inputs)
       else
-          output.write ember_i18n_output(inputs)
+        output.write ember_i18n_output(inputs)
       end
     end
 
     private
-    def i18n_js_output(inputs)
-      translations = {}
-      inputs.each { |input| translations.merge!(YAML.load(input.read).to_hash) }
-      "window.i18n.translations = #{translations.to_json}"
-    end
-
-    def ember_i18n_output(inputs)
-      "var EmberI18n = { set_locale : function(locale) {
-                                        strings = this[locale]
-                                        if(strings) { Ember.STRINGS = strings }
-                                      },
-                                      #{compile_locales_for_ember_i18n(inputs)}
-      };"
-    end
 
     def external_dependencies
       [ 'yaml' ]
     end
 
-    def compile_locales_for_ember_i18n(inputs)
-      inputs.map do |input|
-        parse_locale(input.read)
-      end.join(',')
+    def i18n_js_output(inputs)
+      "I18n.translations = I18n.translations || {};#{compile_locales_for_i18n_js(inputs)};"
     end
 
-    def parse_locale(yml_file)
+    def compile_locales_for_i18n_js(inputs)
+      translations = {}
+      inputs.each { |input| translations.merge!(YAML.load(input.read).to_hash) }
+      translations.map do |locale_key, locale_value|
+        "I18n.translations['#{locale_key}'] = #{locale_value.to_json}"
+      end.join(';')
+    end
+
+    def ember_i18n_output(inputs)
+      "EmberI18n = EmberI18n || {};#{compile_locales_for_ember_i18n(inputs)}"
+    end
+
+    def compile_locales_for_ember_i18n(inputs)
+      inputs.map do |input|
+        parse_ember_i18n_locale(input.read)
+      end.join(';')
+    end
+
+    def parse_ember_i18n_locale(yml_file)
       dotified = dotify(YAML.load(yml_file))
       dotified.map do |locale_key, locale_value|
-
-        locale_strings = locale_value.map do |entry_key, entry_value| 
+        locale_strings = locale_value.map do |entry_key, entry_value|
           "'#{entry_key}' : '#{entry_value}'"
         end.join(',')
-
-        "'#{locale_key}': { #{locale_strings} }"
-      end.join(',')
+        "EmberI18n['#{locale_key}'] = { #{locale_strings} };"
+      end.join('')
     end
 
     def dotify(source, target={}, path=nil)
