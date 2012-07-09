@@ -97,17 +97,6 @@ CSS
     file.body.should == expected_css_output("border.css")
   end
 
-  it "generates rake tasks for files within additional load path" do
-    touch_p("additional/styles.css")
-    filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
-
-    tasks = filter.generate_rake_tasks
-
-    prerequisite_names = tasks.first.prerequisite_tasks.map { |p| p.name }
-
-    prerequisite_names.should include("additional/styles.css")
-  end
-
   describe "additional load paths" do
     it "is empty by default" do
       filter = setup_filter(SassFilter.new)
@@ -125,30 +114,34 @@ CSS
     end
   end
 
-  describe "additional file paths" do
-    it "includes all nested files" do
-      touch_p("additional/styles.css")
-      touch_p("additional/nested/styles.css")
-      filter = setup_filter(SassFilter.new(:additional_load_paths => "additional"))
-
-      filter.additional_dependencies.should include("additional/styles.css")
-      filter.additional_dependencies.should include("additional/nested/styles.css")
+  describe "additional dependencies" do
+    def write_input_file(filename, contents='', root=tmp)
+      mkdir_p root
+      File.open(File.join(root, filename), 'w') { |f| f.puts contents }
+      Rake::Pipeline::FileWrapper.new(root, filename)
     end
 
-    it "works with tralling slash" do
-      touch_p("additional/nested/styles.css")
-      filter = setup_filter(SassFilter.new(:additional_load_paths => "additional/"))
+    let(:main_scss) { '@import "blue";' }
+    let(:blue_scss) { '$blue: #3bbfce;' }
+    let!(:main) { write_input_file('main.scss', main_scss) }
+    let!(:blue) { write_input_file('blue.scss', blue_scss) }
 
-      filter.additional_dependencies.should include("additional/nested/styles.css")
+    before do
+      File.open(main.fullpath, "w") { |f| f.puts main_scss }
+      File.open(blue.fullpath, "w") { |f| f.puts blue_scss }
     end
 
-    it "includes files from different load paths" do
-      touch_p("additional/styles.css")
-      touch_p("extra/styles.css")
-      filter = setup_filter(SassFilter.new(:additional_load_paths => ["additional", "extra"]))
+    it "includes @imported files" do
+      filter = SassFilter.new
+      filter.input_files = [main]
+      filter.output_root = "#{tmp}/output"
+      filter.rake_application = Rake::Application.new
 
-      filter.additional_dependencies.should include("additional/styles.css")
-      filter.additional_dependencies.should include("extra/styles.css")
+      filter.additional_dependencies(main).should include(blue.fullpath)
+
+      tasks = filter.generate_rake_tasks
+      tasks.each(&:invoke)
     end
   end
+
 end
