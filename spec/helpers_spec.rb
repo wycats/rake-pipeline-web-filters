@@ -95,6 +95,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
     end
   end
+
+  describe '#i18n_js' do
+    it "creates an EMberI18nFilter" do
+      dsl.ember_i18n
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::EmberI18nFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do

@@ -92,6 +92,13 @@ module Rake::Pipeline::Web::Filters
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
     end
+
+    # Add a new {EmberI18nFilter} to the pipeline
+    # @see EmberI18nFilter#initialize
+    def ember_i18n(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::EmberI18nFilter, *args, &block)
+    end
+
   end
 
   module ProjectHelpers
