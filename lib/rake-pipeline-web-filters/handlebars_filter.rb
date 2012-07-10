@@ -30,7 +30,7 @@ module Rake::Pipeline::Web::Filters
     #   {#output_name_generator}.
     def initialize(options={},&block)
       # Convert .handlebars file extensions to .js
-      block ||= proc { |input| input.sub(/\.handlebars$/, '.js') }
+      block ||= proc { |input| input.sub(/\.handlebars|\.hbs$/, '.js') }
       super(&block)
       @options = {
           :target =>'Ember.TEMPLATES',

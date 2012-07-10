@@ -28,4 +28,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "uglifier"
   gem.add_development_dependency "less"
   gem.add_development_dependency "json"
+  gem.add_development_dependency "therubyracer"
 end
