@@ -1,8 +1,8 @@
 module Rake::Pipeline::Web::Filters
 
   class NeuterBatch
-    def initialize(config={}, known_files)
-      @config = config
+    def initialize(config, known_files)
+      @config = config || {}
       @known_files = known_files
       @required = []
     end
