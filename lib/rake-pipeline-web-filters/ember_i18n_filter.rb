@@ -21,12 +21,11 @@ module Rake::Pipeline::Web::Filters
     #   A hash of options for this filter
     # @option [String] :use_i18n_js
     #   When true, localization information will be output in a format
-    #   suitable for i18n-js. If this options is missing data will be
-    #   output in the format that Ember.String.loc expects and a method
-    #   javascript method EmberI18n.set_locale([string]) is created to
-    #   apply a specific set of tranlsations to Ember.STRINGS
-    # @note i18n.js is not included, only the translations that 
-    #       can be used by i18n.js
+    #   suitable for i18n-js. If this option is missing data will be
+    #   output in the format that Ember.String.loc expects.
+    # @note If you are using Ember.String.loc be sure to set
+    #      Ember.STRINGS = EmberI18n['locale'];
+    # where 'locale' is the locale you have parsed and want to render.
     # @see https://github.com/fnando/i18n-js
     # @see http://docs.emberjs.com/symbols/Ember.String.html#method=.loc
     # @param [Proc] block a block to use as the Filter's
@@ -39,7 +38,7 @@ module Rake::Pipeline::Web::Filters
 
     # Implement the {#generate_output} method required by
     # the {Filter} API. Generates javascript from i18n yaml files
-    # appropriate for Ember#String#loc
+    # appropriate for Ember#String#loc or i18n-js
     # @param [Array<FileWrapper>] inputs an Array of
     #   {FileWrapper} objects representing the inputs to
     #   this filter.
