@@ -44,6 +44,20 @@ HERE
     file.encoding.should == "UTF-8"
   end
 
+  it "skips minified files" do
+    filter = setup_filter UglifyFilter.new
+    filter.input_files = [input_file("name.min.js", 'fake-js')]
+
+    filter.output_files.should == [output_file("name.min.js")]
+
+    tasks = filter.generate_rake_tasks
+    tasks.each(&:invoke)
+
+    file = MemoryFileWrapper.files["/path/to/output/name.min.js"]
+    file.body.should == 'fake-js'
+    file.encoding.should == "UTF-8"
+  end
+
   describe "naming output files" do
     it "translates .js extensions to .min.js by default" do
       filter = setup_filter UglifyFilter.new

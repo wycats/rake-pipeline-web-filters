@@ -48,6 +48,21 @@ HERE
     file.encoding.should == "UTF-8"
   end
 
+  it "skips files named .min" do
+    filter = setup_filter YUICssFilter.new
+
+    filter.input_files = [input_file("error.min.css", "fake-css")]
+
+    filter.output_files.should == [output_file("error.min.css")]
+
+    tasks = filter.generate_rake_tasks
+    tasks.each(&:invoke)
+
+    file = MemoryFileWrapper.files["/path/to/output/error.min.css"]
+    file.body.should == "fake-css"
+    file.encoding.should == "UTF-8"
+  end
+
   describe "naming output files" do
     it "translates .css extensions to .min.css by default" do
       filter = setup_filter YUICssFilter.new
