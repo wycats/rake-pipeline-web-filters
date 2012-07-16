@@ -25,6 +25,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::SassFilter)
     end
   end
+  
+  describe "#stylus" do
+    it "creates a StylusCompiler" do
+      dsl.stylus
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::StylusFilter)
+    end
+  end
 
   describe "#tilt" do
     it "creates a TiltFilter" do

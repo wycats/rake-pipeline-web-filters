@@ -32,6 +32,12 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::SassFilter, *args, &block)
     end
     alias_method :scss, :sass
+    
+    # Add a new {StylusFilter} to the pipeline.
+    # @see StylusFilter#initialize
+    def stylus(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::StylusFilter, *args, &block)
+    end
 
     # Add a new {TiltFilter} to the pipeline.
     # @see TiltFilter#initialize
