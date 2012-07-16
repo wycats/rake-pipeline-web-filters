@@ -28,7 +28,14 @@ module Rake::Pipeline::Web::Filters
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={}, &block)
-      block ||= proc { |input| input.sub(/\.css$/, '.min.css') }
+      block ||= proc { |input| 
+        if input =~ %r{min.css$}
+          input
+        else
+          input.sub /\.css$/, '.min.css'
+        end
+      }
+
       super(&block)
       @options = options
     end
@@ -45,7 +52,11 @@ module Rake::Pipeline::Web::Filters
     def generate_output(inputs, output)
       compressor = YUI::CssCompressor.new(options)
       inputs.each do |input|
-        output.write compressor.compress(input.read)
+        if input.path !~ /min\.css/
+          output.write compressor.compress(input.read)
+        else
+          output.write input.read
+        end
       end
     end
 
