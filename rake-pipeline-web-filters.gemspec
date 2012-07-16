@@ -29,4 +29,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "less"
   gem.add_development_dependency "json"
   gem.add_development_dependency "therubyracer"
+  gem.add_development_dependency "stylus"
 end
