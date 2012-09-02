@@ -98,6 +98,12 @@ module Rake::Pipeline::Web::Filters
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
     end
+    #
+    # Add a new {ErbFilter} to the pipeline.
+    # @see ErbFilter#initialize
+    def erb(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::ErbFilter, *args, &block)
+    end
   end
 
   module ProjectHelpers
