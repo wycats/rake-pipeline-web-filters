@@ -102,6 +102,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
     end
   end
+
+  describe "#erb" do
+    it "creates ErbFilter" do
+      dsl.erb
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::ErbFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do
