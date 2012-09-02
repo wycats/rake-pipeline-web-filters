@@ -32,7 +32,7 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::SassFilter, *args, &block)
     end
     alias_method :scss, :sass
-    
+
     # Add a new {StylusFilter} to the pipeline.
     # @see StylusFilter#initialize
     def stylus(*args, &block)
@@ -97,6 +97,22 @@ module Rake::Pipeline::Web::Filters
     # @see HandlebarsFilter#initialize
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
+    end
+    #
+    # Add a new {ManifestFilter} to the pipeline.
+    # @see ManifestFilter#initialize
+    def manifest(*args, &block)
+      # Duplicate all current items in the pipeline into a new directory.
+      # We must work with duplicates otherwise the initial ones will
+      # be blown away. The manifest filter will strip out the manifest
+      # directory when generating the file.
+      match "**/*" do
+        copy { |name| [name, "manifest/#{name}"] }
+      end
+
+      match "manifest/**/*" do
+        filter(Rake::Pipeline::Web::Filters::ManifestFilter, *args, &block)
+      end
     end
   end
 

@@ -102,6 +102,19 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
     end
   end
+
+  describe "#manifest" do
+    it "setups a proper manifest pipeline" do
+      dsl.manifest
+
+      pipeline.filters.first.should be_kind_of(Rake::Pipeline::Matcher)
+      pipeline.filters.first.glob.should == "**/*"
+
+      filter.should be_kind_of(Rake::Pipeline::Matcher)
+      filter.glob.should == "manifest/**/*"
+      filter.filters.first.should be_kind_of(Rake::Pipeline::Web::Filters::ManifestFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do
