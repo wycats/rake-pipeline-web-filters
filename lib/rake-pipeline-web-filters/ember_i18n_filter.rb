@@ -101,4 +101,3 @@ module Rake::Pipeline::Web::Filters
     end
   end
 end
-

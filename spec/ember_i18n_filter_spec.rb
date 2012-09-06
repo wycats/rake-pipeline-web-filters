@@ -6,7 +6,7 @@ describe "EmberI18nFilter" do
   EmberI18nFilter ||= Rake::Pipeline::Web::Filters::EmberI18nFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
-  # Seems like YAML is expecting this method so.  
+  # Seems like YAML is expecting this method.
   MemoryFileWrapper.class_eval( 'def external_encoding; Encoding.default_external; end')
 
   let(:input) { yaml = <<EOF
@@ -19,7 +19,7 @@ ja:
   hoge: ホゲ
 EOF
   }
-  
+
   # not using heredoc as it adds an extra \n to the end
   let(:expected_ember_i18n_js) {
   "EmberI18n = EmberI18n || {};EmberI18n['en'] = { 'foo' : 'bar','hoge' : 'hoge' };EmberI18n['ja'] = { 'foo' : 'バー','hoge' : 'ホゲ' };"
