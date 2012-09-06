@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'rake-pipeline-web-filters/filter_with_dependencies'
 
 module Rake::Pipeline::Web::Filters
