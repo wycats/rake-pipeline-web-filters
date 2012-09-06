@@ -102,6 +102,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::HandlebarsFilter)
     end
   end
+
+  describe "#iffe" do
+    it "creates a IifeFilter" do
+      dsl.iife
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::IifeFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do

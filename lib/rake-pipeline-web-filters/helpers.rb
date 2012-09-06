@@ -32,7 +32,7 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::SassFilter, *args, &block)
     end
     alias_method :scss, :sass
-    
+
     # Add a new {StylusFilter} to the pipeline.
     # @see StylusFilter#initialize
     def stylus(*args, &block)
@@ -97,6 +97,12 @@ module Rake::Pipeline::Web::Filters
     # @see HandlebarsFilter#initialize
     def handlebars(*args, &block)
       filter(Rake::Pipeline::Web::Filters::HandlebarsFilter, *args, &block)
+    end
+    #
+    # Add a new {IifeFilter} to the pipeline.
+    # @see IifeFilter#initialize
+    def iife(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::IifeFilter, *args, &block)
     end
   end
 
