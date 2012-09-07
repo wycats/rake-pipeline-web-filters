@@ -63,10 +63,8 @@ module Rake::Pipeline::Web::Filters
 
     def compile_locales_for_i18n_js(inputs)
       translations = {}
-      inputs.each { |input| translations.merge!(YAML.load(input.read).to_hash) }
-      translations.map do |locale_key, locale_value|
-        "I18n.translations['#{locale_key}'] = #{locale_value.to_json}"
-      end.join(';')
+      inputs.each { |input| translations.merge!(YAML.load(input.read)) }
+      "I18n.translations = #{JSON.pretty_generate(translations)};"
     end
 
     def ember_i18n_output(inputs)
