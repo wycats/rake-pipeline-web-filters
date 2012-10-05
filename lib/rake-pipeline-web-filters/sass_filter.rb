@@ -55,13 +55,9 @@ module Rake::Pipeline::Web::Filters
       end
     end
 
-    # @param [FileWrapper] file wrapper to get paths for
-    # @return [Array<String>] array of file paths within additional dependencies
-    def additional_dependencies(input=nil)
-      additional_load_paths.map do |path|
-        path += "/" unless path.end_with?("/")
-        Dir.glob(path + "**/*")
-      end.flatten
+    def additional_dependencies(input)
+      engine = Sass::Engine.new(input.read, sass_options_for_file(input))
+      engine.dependencies.map { |dep| dep.options[:filename] }
     end
 
   private
