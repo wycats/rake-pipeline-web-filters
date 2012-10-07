@@ -15,9 +15,6 @@ module Rake::Pipeline::Web::Filters
     end
 
     def required(req)
-      unless @known_files.include?(req)
-        warn "Included '#{req}', which is not listed in :additional_dependencies. The pipeline may not invalidate properly."
-      end
       @required << req
     end
 
@@ -103,8 +100,12 @@ module Rake::Pipeline::Web::Filters
     end
 
     def additional_dependencies(input)
-      method = @config[:additional_dependencies]
-      method ? method.call(input).map{|p| File.expand_path(p, input.root) } : []
+      regexp = @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
+      requires = input.read.scan regexp
+
+      requires.flatten.map do |file|
+        @config[:path_transform] ? @config[:path_transform].call(file) : file
+      end
     end
   end
 end
