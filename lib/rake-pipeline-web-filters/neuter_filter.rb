@@ -54,7 +54,9 @@ module Rake::Pipeline::Web::Filters
 
       required_files = @batch.strip_requires(source).map do |req|
         req_path = @batch.transform_path(req, self)
-        if req_path && !@batch.required?(File.expand_path(req_path, root))
+        real_path = File.expand_path(req_path, root)
+
+        if req_path && !@batch.required?(real_path)
           @batch.file_wrapper(self.class, root, req_path, encoding).neuter
         else
           nil
@@ -69,6 +71,7 @@ module Rake::Pipeline::Web::Filters
     def dependencies
       @batch.strip_requires(read).map do |req|
         req_path = @batch.transform_path(req, self)
+        @batch.file_wrapper(self.class, root, req_path, encoding)
       end
     end
   end
@@ -98,7 +101,7 @@ module Rake::Pipeline::Web::Filters
 
     def generate_output(inputs, output)
       inputs.each do |input|
-        known_files = [input.fullpath] + additional_dependencies(input)
+        known_files = [input.fullpath]
         batch = NeuterBatch.new(@config, known_files)
         file = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
         output.write file.neuter
@@ -106,7 +109,10 @@ module Rake::Pipeline::Web::Filters
     end
 
     def additional_dependencies(input)
-      return []
+      dependent_files(input).map(&:fullpath)
+    end
+
+    def dependent_files(input)
       batch = NeuterBatch.new @config, [input.fullpath]
       wrapper = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
       wrapper.dependencies
