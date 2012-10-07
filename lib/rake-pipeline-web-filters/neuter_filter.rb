@@ -1,9 +1,8 @@
 module Rake::Pipeline::Web::Filters
 
   class NeuterBatch
-    def initialize(config, known_files)
+    def initialize(config)
       @config = config || {}
-      @known_files = known_files
       @required = []
     end
 
@@ -24,10 +23,17 @@ module Rake::Pipeline::Web::Filters
 
     def strip_requires(source)
       requires = []
-      regexp = @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
       # FIXME: This $1 may not be reliable with other regexps
       source.gsub!(regexp){ requires << $1; '' }
       requires
+    end
+
+    def requires(source)
+      source.scan(regexp).flatten
+    end
+
+    def regexp
+      @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
     end
 
     def transform_path(path, input)
@@ -69,7 +75,7 @@ module Rake::Pipeline::Web::Filters
     end
 
     def dependencies
-      @batch.strip_requires(read).map do |req|
+      @batch.requires(read).map do |req|
         req_path = @batch.transform_path(req, self)
         @batch.file_wrapper(self.class, root, req_path, encoding)
       end
@@ -101,8 +107,7 @@ module Rake::Pipeline::Web::Filters
 
     def generate_output(inputs, output)
       inputs.each do |input|
-        known_files = [input.fullpath]
-        batch = NeuterBatch.new(@config, known_files)
+        batch = NeuterBatch.new @config
         file = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
         output.write file.neuter
       end
@@ -113,7 +118,7 @@ module Rake::Pipeline::Web::Filters
     end
 
     def dependent_files(input)
-      batch = NeuterBatch.new @config, [input.fullpath]
+      batch = NeuterBatch.new @config
       wrapper = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
       wrapper.dependencies
     end
