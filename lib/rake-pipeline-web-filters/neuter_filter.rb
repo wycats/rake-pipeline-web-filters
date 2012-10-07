@@ -49,13 +49,13 @@ module Rake::Pipeline::Web::Filters
       @batch.required(fullpath)
     end
 
-    def read
-      source = super
+    def neuter
+      source = read
 
       required_files = @batch.strip_requires(source).map do |req|
         req_path = @batch.transform_path(req, self)
         if req_path && !@batch.required?(File.expand_path(req_path, root))
-          @batch.file_wrapper(self.class, root, req_path, encoding).read
+          @batch.file_wrapper(self.class, root, req_path, encoding).neuter
         else
           nil
         end
@@ -64,6 +64,12 @@ module Rake::Pipeline::Web::Filters
       file = @batch.filename_comment(self) + @batch.closure_wrap(source)
 
       (required_files << file).join("\n\n")
+    end
+
+    def dependencies
+      @batch.strip_requires(read).map do |req|
+        req_path = @batch.transform_path(req, self)
+      end
     end
   end
 
@@ -95,17 +101,15 @@ module Rake::Pipeline::Web::Filters
         known_files = [input.fullpath] + additional_dependencies(input)
         batch = NeuterBatch.new(@config, known_files)
         file = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
-        output.write file.read
+        output.write file.neuter
       end
     end
 
     def additional_dependencies(input)
-      regexp = @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
-      requires = input.read.scan regexp
-
-      requires.flatten.map do |file|
-        @config[:path_transform] ? @config[:path_transform].call(file) : file
-      end
+      return []
+      batch = NeuterBatch.new @config, [input.fullpath]
+      wrapper = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
+      wrapper.dependencies
     end
   end
 end

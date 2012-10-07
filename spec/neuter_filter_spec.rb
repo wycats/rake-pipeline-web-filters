@@ -175,10 +175,9 @@ describe "NeuterFilter" do
     describe "additional_dependencies" do
       let!(:main_input_file) { make_input("a.js", %Q{require("b");}) }
       let!(:required_input_file) { make_input("b.js", "foo") }
-      let!(:path_transform) { proc { |f| "/path/to/input/#{f}.js" } }
 
       it "determines them from require statments in the file" do
-        filter = Rake::Pipeline::Web::Filters::NeuterFilter.new :path_transform => path_transform
+        filter = Rake::Pipeline::Web::Filters::NeuterFilter.new
         filter.input_files = [main_input_file]
         filter.output_root = "/path/to/output"
         filter.rake_application = Rake::Application.new
