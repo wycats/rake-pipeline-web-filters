@@ -179,12 +179,23 @@ describe "NeuterFilter" do
       it "determines them from require statments in the file" do
         filter = Rake::Pipeline::Web::Filters::NeuterFilter.new
         filter.file_wrapper_class = MemoryFileWrapper
-        filter.input_files = [main_input_file]
+        filter.input_files = []
         filter.output_root = "/path/to/output"
         filter.rake_application = Rake::Application.new
 
         dependencies = filter.additional_dependencies(main_input_file)
         dependencies.should include(required_input_file.fullpath)
+      end
+
+      it "determines there are no dependencies" do
+        filter = Rake::Pipeline::Web::Filters::NeuterFilter.new
+        filter.file_wrapper_class = MemoryFileWrapper
+        filter.output_root = "/path/to/output"
+        filter.rake_application = Rake::Application.new
+        filter.input_files = []
+
+        dependencies = filter.additional_dependencies(required_input_file)
+        dependencies.should == []
       end
     end
   end
