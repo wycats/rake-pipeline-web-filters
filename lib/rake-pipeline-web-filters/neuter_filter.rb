@@ -28,10 +28,6 @@ module Rake::Pipeline::Web::Filters
       requires
     end
 
-    def requires(source)
-      source.scan(regexp).flatten
-    end
-
     def regexp
       @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
     end
@@ -75,7 +71,7 @@ module Rake::Pipeline::Web::Filters
     end
 
     def dependencies
-      @batch.requires(read).map do |req|
+      read.scan(@batch.regexp).map do |req|
         req_path = @batch.transform_path(req, self)
         @batch.file_wrapper(self.class, root, req_path, encoding)
       end
