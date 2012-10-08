@@ -126,9 +126,18 @@ CSS
     let!(:main) { write_input_file('main.scss', main_scss) }
     let!(:blue) { write_input_file('blue.scss', blue_scss) }
 
+    let(:fixtures_path) { File.expand_path("../fixtures", __FILE__) }
+    let(:sandbox_path) { File.expand_path("../sandbox", __FILE__) }
+
     before do
       File.open(main.fullpath, "w") { |f| f.puts main_scss }
       File.open(blue.fullpath, "w") { |f| f.puts blue_scss }
+
+      FileUtils.mkdir_p sandbox_path
+    end
+
+    after do
+      FileUtils.rm_rf sandbox_path
     end
 
     it "includes @imported files" do
@@ -142,6 +151,31 @@ CSS
       tasks = filter.generate_rake_tasks
       tasks.each(&:invoke)
     end
-  end
 
+    it "should expand sprite imports using the compass load path" do
+      Compass.reset_configuration!
+      Compass.configuration.sprite_load_path << sandbox_path
+
+      FileUtils.mkdir "#{sandbox_path}/icons"
+
+      FileUtils.cp "#{fixtures_path}/icon.png", "#{sandbox_path}/icons/icon1.png"
+      FileUtils.cp "#{fixtures_path}/icon.png", "#{sandbox_path}/icons/icon2.png"
+
+      sprites = write_input_file 'sprites.scss', <<-scss
+        @import "icons/*.png";
+        @include all-icons-sprites;
+      scss
+
+      filter = SassFilter.new
+      filter.input_files = [sprites]
+      filter.output_root = "#{tmp}/output"
+      filter.rake_application = Rake::Application.new
+
+      tasks = filter.generate_rake_tasks
+      tasks.each(&:invoke)
+
+      filter.additional_dependencies(sprites).should include("#{sandbox_path}/icons/icon1.png")
+      filter.additional_dependencies(sprites).should include("#{sandbox_path}/icons/icon2.png")
+    end
+  end
 end
