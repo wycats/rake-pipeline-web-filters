@@ -33,6 +33,13 @@ describe "Helpers" do
     end
   end
 
+  describe "#jade" do
+    it "creates a JadeCompiler" do
+      dsl.jade
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::JadeFilter)
+    end
+  end
+
   describe "#tilt" do
     it "creates a TiltFilter" do
       dsl.tilt

@@ -33,6 +33,12 @@ module Rake::Pipeline::Web::Filters
     end
     alias_method :scss, :sass
 
+  # Add a new {JadeFilter} to the pipeline.
+    # @see JadeFilter#initialize
+    def jade(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::JadeFilter, *args, &block)
+    end
+
     # Add a new {StylusFilter} to the pipeline.
     # @see StylusFilter#initialize
     def stylus(*args, &block)
