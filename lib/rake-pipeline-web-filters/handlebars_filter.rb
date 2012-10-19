@@ -20,12 +20,14 @@ module Rake::Pipeline::Web::Filters
 
     # @param [Hash] options
     #   options to pass to the output generator
-    # @option options [Array] :target
+    # @option options [String] :target
     #   the variable to store templates in
-    # @option options [Array] :compile_open
+    # @option options [Proc] :wrapper_proc
     #   the js to wrap template contents in
-    # @option options [Array] :compile_close
-    #   the js to wrap template contents in
+    # @option options [Proc] :compiler_proc
+    #   processes the source. Return value is passed to wrapper_proc
+    # @option options [Proc] :key_name_proc
+    #   used to determine the template name
     # @param [Proc] block a block to use as the Filter's
     #   {#output_name_generator}.
     def initialize(options={},&block)
@@ -36,7 +38,7 @@ module Rake::Pipeline::Web::Filters
           :target =>'Ember.TEMPLATES',
           :wrapper_proc => proc { |source| "Ember.Handlebars.compile(#{source});" },
           :key_name_proc => proc { |input| File.basename(input.path, File.extname(input.path)) },
-          :compiler => proc { |source| source },
+          :compiler_proc => proc { |source| source },
         }.merge(options)
     end
 
@@ -47,7 +49,7 @@ module Rake::Pipeline::Web::Filters
         name = options[:key_name_proc].call(input)
 
         # Read the file and escape it so it's a valid JS string
-        source = options[:compiler].call(input.read.to_json)
+        source = options[:compiler_proc].call(input.read.to_json)
 
         # Write out a JS file, saved to target, wrapped in compiler
         output.write "#{options[:target]}['#{name}']=#{options[:wrapper_proc].call(source)}"

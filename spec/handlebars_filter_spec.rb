@@ -67,8 +67,8 @@ describe "HandlebarsFilter" do
       file.body.should =~ /^Ember\.TEMPLATES\['new_name_key'\]/
     end
 
-    it "should have a compiler options" do
-      filter = setup_filter(HandlebarsFilter.new(:compiler => proc { |source| "COMPILED(#{source})" }))
+    it "should have a compiler_proc options" do
+      filter = setup_filter(HandlebarsFilter.new(:compiler_proc => proc { |source| "COMPILED(#{source})" }))
 
       tasks = filter.generate_rake_tasks
       tasks.each(&:invoke)
