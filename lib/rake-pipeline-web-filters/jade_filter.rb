@@ -42,10 +42,12 @@ module Rake::Pipeline::Web::Filters
 
       inputs.each do |input|
         if options[:pretty]
-          output.write `echo "#{input.read}" | jade -P`
+          `jade < #{input.root}/#{input.path} -P --path #{input.root}/#{input.path} > #{output.root}/#{output.path}`
         else
-          output.write `echo "#{input.read}" | jade`
+          `jade < #{input.root}/#{input.path} --path #{input.root}/#{input.path} > #{output.root}/#{output.path}`
         end
+        out = output.read
+        output.write out
       end
     end
 
