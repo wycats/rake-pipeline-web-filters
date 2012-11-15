@@ -23,10 +23,3 @@ In your +Assetfile+:
   match "*.scss" do
     filter Rake::Pipeline::Web::Filters::SassCompiler
   end
-
-= Available Filters
-
-* {Rake::Pipeline::Web::Filters::MinispadeFilter}: Wraps JS code for use with Minispade
-* {Rake::Pipeline::Web::Filters::SassCompiler}: Compiles SCSS or Sass to CSS
-* {Rake::Pipeline::Web::Filters::TiltFilter}: Compiles templates with the Tilt template interface
-
