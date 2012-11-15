@@ -1,6 +1,7 @@
 describe "SassFilter" do
   SassFilter ||= Rake::Pipeline::Web::Filters::SassFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:scss_input) { <<-SCSS }
 $blue: #3bbfce;
@@ -36,6 +37,8 @@ CSS
 
   def setup_filter(filter, input_files=nil)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = input_files || [input_file("border.scss", scss_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

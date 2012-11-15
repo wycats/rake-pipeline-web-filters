@@ -2,6 +2,7 @@ require 'stringio'
 
 describe "NeuterFilter" do
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   def make_input(name, data)
     make_data(name, data)
@@ -19,6 +20,8 @@ describe "NeuterFilter" do
 
     filter = Rake::Pipeline::Web::Filters::NeuterFilter.new(*args)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = input_files
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

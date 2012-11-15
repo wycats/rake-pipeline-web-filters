@@ -1,6 +1,7 @@
 describe "CoffeeScriptFilter" do
   CoffeeScriptFilter ||= Rake::Pipeline::Web::Filters::CoffeeScriptFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:coffee_input) { <<-COFFEE }
 x = 1;
@@ -46,6 +47,8 @@ y = function() {
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("input.coffee", coffee_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
