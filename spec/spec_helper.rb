@@ -1,4 +1,3 @@
-require "pry"
 require "rake-pipeline"
 require "rake-pipeline-web-filters"
 

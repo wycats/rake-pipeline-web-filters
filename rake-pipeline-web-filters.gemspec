@@ -30,5 +30,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "json"
   gem.add_development_dependency "therubyracer"
   gem.add_development_dependency "stylus"
-  gem.add_development_dependency "jade"
 end
