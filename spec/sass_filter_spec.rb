@@ -136,6 +136,8 @@ CSS
 
     it "includes @imported files" do
       filter = SassFilter.new
+      filter.last_manifest = MemoryManifest.new
+      filter.manifest = MemoryManifest.new
       filter.input_files = [main]
       filter.output_root = "#{tmp}/output"
       filter.rake_application = Rake::Application.new
