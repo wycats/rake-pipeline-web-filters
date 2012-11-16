@@ -47,18 +47,34 @@ HERE
     file.encoding.should == "UTF-8"
   end
 
-  it "skips minified files" do
-    filter = setup_filter UglifyFilter.new
-    filter.input_files = [input_file("name.min.js", 'fake-js')]
+  describe "Skipping" do
+    it "skips files ending in .min.js" do
+      filter = setup_filter UglifyFilter.new
+      filter.input_files = [input_file("name.min.js", 'fake-js')]
 
-    filter.output_files.should == [output_file("name.min.js")]
+      filter.output_files.should == [output_file("name.min.js")]
 
-    tasks = filter.generate_rake_tasks
-    tasks.each(&:invoke)
+      tasks = filter.generate_rake_tasks
+      tasks.each(&:invoke)
 
-    file = MemoryFileWrapper.files["/path/to/output/name.min.js"]
-    file.body.should == 'fake-js'
-    file.encoding.should == "UTF-8"
+      file = MemoryFileWrapper.files["/path/to/output/name.min.js"]
+      file.body.should == 'fake-js'
+      file.encoding.should == "UTF-8"
+    end
+
+    it "does not count files ending in min.js as preminified" do
+      filter = setup_filter UglifyFilter.new
+      filter.input_files = [input_file("min.js", js_input)]
+
+      filter.output_files.should == [output_file("min.min.js")]
+
+      tasks = filter.generate_rake_tasks
+      tasks.each(&:invoke)
+
+      file = MemoryFileWrapper.files["/path/to/output/min.min.js"]
+      file.body.should == expected_js_output
+      file.encoding.should == "UTF-8"
+    end
   end
 
   describe "naming output files" do
