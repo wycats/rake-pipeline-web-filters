@@ -35,8 +35,15 @@ module Rake::Pipeline::Web::Filters
         end
       }
 
+      @preserve_input = options.delete :preserve_input
+
       super(&block)
       @options = options
+    end
+
+    def should_skip_minify?(input, output)
+      (@preserve_input && input.path == output.path) ||
+      input.path =~ %r{.min.js$}
     end
 
     # Implement the {#generate_output} method required by
@@ -49,7 +56,7 @@ module Rake::Pipeline::Web::Filters
     #   object representing the output.
     def generate_output(inputs, output)
       inputs.each do |input|
-        if input.path =~ %r{.min.js$}
+        if should_skip_minify?(input, output)
           output.write input.read
         else
           output.write Uglifier.compile(input.read, options)
@@ -58,6 +65,15 @@ module Rake::Pipeline::Web::Filters
     end
 
     private
+
+    def output_paths(input)
+      paths = super(input)
+      if @preserve_input
+        raise 'cannot preserve unminified input if output path is not different' if paths.include?(input.path)
+        paths.unshift(input.path)
+      end
+      paths
+    end
 
     def external_dependencies
       [ 'uglifier' ]
