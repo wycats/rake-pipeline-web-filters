@@ -1,6 +1,7 @@
 describe "LessFilter" do
   LessFilter ||= Rake::Pipeline::Web::Filters::LessFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:less_input) { <<-SCSS }
 @blue: #3bbfce;
@@ -26,6 +27,8 @@ CSS
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("border.less", less_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

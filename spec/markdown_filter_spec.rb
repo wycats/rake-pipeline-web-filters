@@ -1,6 +1,7 @@
 describe "MarkdownFilter" do
   MarkdownFilter ||= Rake::Pipeline::Web::Filters::MarkdownFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:markdown_input) { <<-MARKDOWN }
 ## This is an H2
@@ -33,6 +34,8 @@ HTML
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("page.md", markdown_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

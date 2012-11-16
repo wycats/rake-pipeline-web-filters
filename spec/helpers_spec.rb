@@ -119,13 +119,8 @@ describe "Helpers" do
 end
 
 describe "ProjectHelpers" do
-  def project
-    @project ||= Rake::Pipeline::Project.new
-  end
-
-  def dsl
-    @dsl ||= Rake::Pipeline::DSL::ProjectDSL.new(project)
-  end
+  let(:project) { Rake::Pipeline::Project.new }
+  let(:dsl) { Rake::Pipeline::DSL::ProjectDSL.new(project) }
 
   describe "register" do
     it "registers filters per file name" do

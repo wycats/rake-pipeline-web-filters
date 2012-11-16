@@ -1,5 +1,6 @@
 describe "TiltFilter" do
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:input_files) {
     [
@@ -20,6 +21,8 @@ describe "TiltFilter" do
       input.sub(/\.(erb|str)$/, '.txt')
     end
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = input_files
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

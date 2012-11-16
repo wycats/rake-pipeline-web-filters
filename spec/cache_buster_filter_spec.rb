@@ -1,5 +1,6 @@
 describe "CacheBusterFilter" do
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
   CacheBusterFilter ||= Rake::Pipeline::Web::Filters::CacheBusterFilter
 
   let(:content) { "it doesn't matter" }
@@ -14,6 +15,8 @@ describe "CacheBusterFilter" do
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [ input_file ]
     filter.output_root = output_root
     filter.rake_application = Rake::Application.new
