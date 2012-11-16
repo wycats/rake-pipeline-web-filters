@@ -1,6 +1,7 @@
 describe "HandlebarsFilter" do
   HandlebarsFilter ||= Rake::Pipeline::Web::Filters::HandlebarsFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:handlebars_input) {
     '<h1 class="title">{{title}}</h1>'
@@ -20,6 +21,8 @@ describe "HandlebarsFilter" do
 
   def setup_filter(filter, input_filename = "test.handlebars")
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file(input_filename, handlebars_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

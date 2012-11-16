@@ -1,8 +1,9 @@
 describe "JadeFilter" do
   JadeFilter ||= Rake::Pipeline::Web::Filters::JadeFilter
-  MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
-  let(:jade_input) {"""
+  let(:jade_input) {
+    """
 !!! 5
 html
   head
@@ -10,12 +11,14 @@ html
   body
     h1 Hello
 """
-}
+  }
 
-  let(:expected_html_output) {"""<!DOCTYPE html><html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>"""
-}
+  let(:expected_html_output) {
+    """<!DOCTYPE html><html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>"""
+  }
 
-let(:expected_prettified_html_output) {"""\
+  let(:expected_prettified_html_output) {
+    """\
 <!DOCTYPE html>
 <html>
   <head>
@@ -25,48 +28,54 @@ let(:expected_prettified_html_output) {"""\
     <h1>Hello</h1>
   </body>
 </html>"""
-}
+  }
 
-  def input_file(name, content)
-    MemoryFileWrapper.new("/path/to/input", name, "UTF-8", content)
-  end
+  let(:input_root) { File.expand_path('./input') }
+  let(:input_path) { 'index.jade' }
 
-  def output_file(name)
-    MemoryFileWrapper.new("/path/to/output", name, "UTF-8")
-  end
+  let(:input_file) {
+    mkdir_p input_root
+    File.open(File.join(input_root, input_path), 'w+:UTF-8') {|file| file << jade_input }
+    Rake::Pipeline::FileWrapper.new(input_root, input_path, "UTF-8")
+  }
+
+  let(:output_root) { File.expand_path('./output') }
+  let(:output_path) { 'index.html' }
+
+  let(:output_file) {
+    Rake::Pipeline::FileWrapper.new(output_root, output_path, "UTF-8")
+  }
 
   def setup_filter(filter, input=jade_input)
-    filter.file_wrapper_class = MemoryFileWrapper
-    filter.input_files = [input_file("index.jade", input)]
-    filter.output_root = "/path/to/output"
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
+    filter.input_files = [input_file]
+    filter.output_root = output_root
     filter.rake_application = Rake::Application.new
     filter
   end
 
   it "generates output" do
     filter = setup_filter JadeFilter.new
-
-    filter.output_files.should == [output_file("index.html")]
+    filter.output_files.should == [output_file]
 
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
 
-    file = MemoryFileWrapper.files["/path/to/output/index.html"]
-    file.body.should == expected_html_output
-    file.encoding.should == "UTF-8"
+    output_file.read.should == expected_html_output
+    output_file.encoding.should == "UTF-8"
   end
 
   it "prettifies output" do
     filter = setup_filter JadeFilter.new :pretty => true
 
-    filter.output_files.should == [output_file("index.html")]
+    filter.output_files.should == [output_file]
 
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
 
-    file = MemoryFileWrapper.files["/path/to/output/index.html"]
-    file.body.should == expected_prettified_html_output
-    file.encoding.should == "UTF-8"
+    output_file.read.should == expected_prettified_html_output
+    output_file.encoding.should == "UTF-8"
   end
 
   describe "naming output files" do

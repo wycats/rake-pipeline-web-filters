@@ -1,6 +1,7 @@
 describe "YUIJavaScriptFilter" do
   YUIFilter ||= Rake::Pipeline::Web::Filters::YUIJavaScriptFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:js_input) { <<-HERE }
 var name = "Truckasaurus Gates";
@@ -25,6 +26,8 @@ HERE
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("name.js", js_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

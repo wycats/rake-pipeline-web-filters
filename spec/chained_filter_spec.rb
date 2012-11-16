@@ -1,5 +1,6 @@
 describe "ChainedFilter" do
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
   ChainedFilter ||= Rake::Pipeline::Web::Filters::ChainedFilter
 
   input_file1 = MemoryFileWrapper.new("/path", "input.js.strip_asserts.erb", "UTF-8", <<-CONTENT)
@@ -58,6 +59,8 @@ Chained = {};
       )
 
       filter.file_wrapper_class = MemoryFileWrapper
+      filter.manifest = MemoryManifest.new
+      filter.last_manifest = MemoryManifest.new
       filter.input_files = [ file_wrapper ]
       filter.output_root = "/output"
       filter.rake_application = Rake::Application.new

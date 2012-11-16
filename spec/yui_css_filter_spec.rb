@@ -1,6 +1,7 @@
 describe "YUICssFilter" do
   YUICssFilter ||= Rake::Pipeline::Web::Filters::YUICssFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:css_input) { <<-HERE }
 div.error {
@@ -29,6 +30,8 @@ HERE
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("error.css", css_input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

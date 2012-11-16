@@ -5,6 +5,7 @@ require 'zlib'
 describe "GzipFilter" do
   GzipFilter ||= Rake::Pipeline::Web::Filters::GzipFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:input) { "(function(){console.log('gzip me')})();" }
 
@@ -18,6 +19,8 @@ describe "GzipFilter" do
 
   def setup_filter(filter)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("test.js", input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

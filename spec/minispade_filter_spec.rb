@@ -2,6 +2,7 @@ require "json"
 
 describe "MinispadeFilter" do
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   def input_file(contents="var foo = 'bar'; // last-line comment", path="/path/to/input", name="foo.js")
     MemoryFileWrapper.new(path, name, "UTF-8", contents)
@@ -20,6 +21,8 @@ describe "MinispadeFilter" do
   def make_filter(input_file, *args)
     filter = Rake::Pipeline::Web::Filters::MinispadeFilter.new(*args)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new

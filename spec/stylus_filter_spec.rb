@@ -1,6 +1,7 @@
 describe "StylusFilter" do
   StylusFilter ||= Rake::Pipeline::Web::Filters::StylusFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
+  MemoryManifest ||= Rake::Pipeline::SpecHelpers::MemoryManifest
 
   let(:styl_input) { <<-STYLUS }
 border-radius()
@@ -36,6 +37,8 @@ CSS
 
   def setup_filter(filter, input=styl_input)
     filter.file_wrapper_class = MemoryFileWrapper
+    filter.manifest = MemoryManifest.new
+    filter.last_manifest = MemoryManifest.new
     filter.input_files = [input_file("border.styl", input)]
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
