@@ -25,7 +25,16 @@ describe "NeuterFilter" do
     filter.input_files = input_files
     filter.output_root = "/path/to/output"
     filter.rake_application = Rake::Application.new
-    filter.generate_rake_tasks.each(&:invoke)
+
+    tasks = filter.generate_rake_tasks
+
+    # TODO work around a bug in rakep THIS IS TEMPORARY
+    filter.rake_application.tasks.each do |task|
+      task.dynamic_prerequisites.each do |prereq|
+        filter.send :create_file_task, prereq
+      end
+    end
+    tasks.each(&:invoke)
     filter
   end
 
