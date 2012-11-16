@@ -6,7 +6,7 @@ rvm:
 
 bundler_args: --without docs
 
-install: npm install -g jade
+before_script: npm install -g jade
 
 notifications:
   email:
