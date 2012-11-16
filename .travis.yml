@@ -6,6 +6,8 @@ rvm:
 
 bundler_args: --without docs
 
+install: npm install -g jade
+
 notifications:
   email:
     - wycats@gmail.com
