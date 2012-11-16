@@ -1,4 +1,4 @@
-# Rake::Pipeline::Web::Filters
+# Rake::Pipeline::Web::Filters [![Build Status](https://secure.travis-ci.org/wycats/rake-pipeline-web-filters.png?branch=master)](http://travis-ci.org/wycats/rake-pipeline-web-filters)
 
 This project contains a set of rake-pipeline filters for building web
 apps. 
