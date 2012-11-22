@@ -25,7 +25,7 @@ EOF
   "EmberI18n = EmberI18n || {};EmberI18n['en'] = { 'foo' : 'bar','hoge' : 'hoge' };EmberI18n['ja'] = { 'foo' : 'バー','hoge' : 'ホゲ' };"
   }
   let(:expected_i18n_js) {
-    "I18n.translations = I18n.translations || {};I18n.translations = {\n  \"en\": {\n    \"foo\": \"bar\",\n    \"hoge\": \"hoge\"\n  },\n  \"ja\": {\n    \"foo\": \"バー\",\n    \"hoge\": \"ホゲ\"\n  }\n};;"
+  "I18n.translations = I18n.translations || {};I18n.translations['en'] = {\"foo\":\"bar\",\"hoge\":\"hoge\"};I18n.translations['ja'] = {\"foo\":\"バー\",\"hoge\":\"ホゲ\"};"
   }
   def input_file(name, content)
     MemoryFileWrapper.new('/path/to/input', name, 'UTF-8', content)
