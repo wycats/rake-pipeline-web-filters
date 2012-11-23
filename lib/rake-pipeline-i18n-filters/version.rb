@@ -1,8 +1,8 @@
 module Rake
   class Pipeline
-    module Web
+    module I18n 
       module Filters
-        VERSION = "0.6.0"
+        VERSION = "0.0.1"
       end
     end
   end

@@ -2,8 +2,8 @@
 require 'yaml'
 
 
-describe "EmberI18nFilter" do
-  EmberI18nFilter ||= Rake::Pipeline::Web::Filters::EmberI18nFilter
+describe "EmberStringsFilter" do
+  EmberStringsFilter ||= Rake::Pipeline::I18n::Filters::EmberStringsFilter
   MemoryFileWrapper ||= Rake::Pipeline::SpecHelpers::MemoryFileWrapper
 
   # Seems like YAML is expecting this method.
@@ -21,11 +21,8 @@ EOF
   }
 
   # not using heredoc as it adds an extra \n to the end
-  let(:expected_ember_i18n_js) {
+  let(:expected_ember_strings) {
   "EmberI18n = EmberI18n || {};EmberI18n['en'] = { 'foo' : 'bar','hoge' : 'hoge' };EmberI18n['ja'] = { 'foo' : 'バー','hoge' : 'ホゲ' };"
-  }
-  let(:expected_i18n_js) {
-  "I18n.translations = I18n.translations || {};I18n.translations['en'] = {\"foo\":\"bar\",\"hoge\":\"hoge\"};I18n.translations['ja'] = {\"foo\":\"バー\",\"hoge\":\"ホゲ\"};"
   }
   def input_file(name, content)
     MemoryFileWrapper.new('/path/to/input', name, 'UTF-8', content)
@@ -43,22 +40,14 @@ EOF
     filter
   end
 
-  it "generates ember_i18n output by default" do
-    filter = setup_filter EmberI18nFilter.new
+  it "generates ember_strings" do
+    filter = setup_filter EmberStringsFilter.new
     filter.output_files.should == [output_file('localizations.js')]
     tasks = filter.generate_rake_tasks
     tasks.each(&:invoke)
     file = MemoryFileWrapper.files['/path/to/output/localizations.js']
-    file.body.should == expected_ember_i18n_js
-  end
-
-  it "generates i18n_js output by option" do
-    filter = setup_filter EmberI18nFilter.new(:use_i18n_js => true)
-    filter.output_files.should == [output_file('localizations.js')]
-    tasks = filter.generate_rake_tasks
-    tasks.each(&:invoke)
-    file = MemoryFileWrapper.files['/path/to/output/localizations.js']
-    file.body.should == expected_i18n_js
+    file.body.should == expected_ember_strings
   end
 
 end
+

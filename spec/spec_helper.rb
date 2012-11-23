@@ -1,7 +1,6 @@
-require "pry"
 require "rake-pipeline"
-require "rake-pipeline-web-filters"
-
+require "rake-pipeline-i18n-filters"
+require 'json'
 class Rake::Pipeline
   module SpecHelpers
 
@@ -102,3 +101,4 @@ RSpec.configure do |config|
     Dir.chdir(original)
   end
 end
+

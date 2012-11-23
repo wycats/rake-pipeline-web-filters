@@ -1,4 +1,4 @@
-module Rake::Pipeline::Web::Filters
+module Rake::Pipeline::I18n::Filters
   # A mixin for filters that have dependencies on external
   # libraries. Include this module in the filter class and
   # declare a private `external_dependencies` method that

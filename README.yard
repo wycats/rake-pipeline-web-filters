@@ -1,7 +1,8 @@
-= Rake::Pipeline::Web::Filters
+= Rake::Pipeline::I18n::Filters
 
-Rake::Pipeline::Web::Filters is a collection of filters for Rake::Pipeline
-for creating pipelines to generate web content.
+Rake::Pipeline::I18n::Filters is a collection of filters for Rake::Pipeline
+for creating pipelines to generate i18n-js and Ember.STRINGS
+localization files from I18n yaml.
 
 = Usage
 
@@ -9,24 +10,32 @@ In your +Assetfile+:
 
   !!!ruby
   require "rake-pipeline-web-filters"
+  require "rake-pipeline-i18n-filters"
 
   input "assets"
   output "public"
 
-  # Take all JS inputs and wrap each of them in code to
-  # register them with the Minispade module loader.
-  match "*.js" do
-    filter Rake::Pipeline::Web::Filters::MinispadeFilter
+  # Take all YAML inputs and generates JS suitable for 
+  # use with i18n-js
+  output 'public/scripts'
+  input 'locales' do
+    match '**/*.yml' do
+      i18nJs
+    end
+    concat 'locales.js'
   end
 
-  # Take all SCSS inputs and compile them with Sass
-  match "*.scss" do
-    filter Rake::Pipeline::Web::Filters::SassCompiler
+  # Take all YAML inputs and generate JS suitable for
+  # use with Ember.STRINGS
+  output 'assets/scripts/config'
+  input 'locales' do
+    match '**/*.yml' do
+      emberStrings
+    end
+    concat 'locales.js'
   end
 
 = Available Filters
 
-* {Rake::Pipeline::Web::Filters::MinispadeFilter}: Wraps JS code for use with Minispade
-* {Rake::Pipeline::Web::Filters::SassCompiler}: Compiles SCSS or Sass to CSS
-* {Rake::Pipeline::Web::Filters::TiltFilter}: Compiles templates with the Tilt template interface
-
+* {Rake::Pipeline::I18n::Filters::I18nJsFilter}: Compile yaml files to JS suitable for use by i18n-js
+* {Rake::Pipeline::I18n::Filters::EmberStringFilter}: Compile YAML to JS * suitable for EmberJS.STRINGS
