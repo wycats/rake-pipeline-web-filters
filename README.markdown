@@ -31,8 +31,8 @@ require 'rake-pipeline-web-filters'
 output "site"
 
 input "javascripts" do
-  match "**/*.coffe" do
-    coffeescript
+  match "**/*.coffee" do
+    coffee_script
   end
 
   match "**/*.js" do
@@ -51,6 +51,19 @@ input "stylesheets" do
     concat "application.css"
     yui_css
   end
+end
+```
+
+And the matching dependencies should be in your `Gemfile` :
+
+```ruby
+group :development do
+  gem 'coffee-script'
+  gem 'uglifier'
+  gem 'yui-compressor'
+  gem 'sass'
+  gem 'rake-pipeline'
+  gem 'rake-pipeline-web-filters'
 end
 ```
 
