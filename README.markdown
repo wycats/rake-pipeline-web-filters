@@ -25,14 +25,14 @@ It includes these filters:
 Here's a quick example of a realistic project's Assetfile:
 
 ```ruby
-# Assetfile.rb
+# Assetfile
 require 'rake-pipeline-web-filters'
 
 output "site"
 
 input "javascripts" do
-  match "**/*.coffe" do
-    coffeescript
+  match "**/*.coffee" do
+    coffee_script
   end
 
   match "**/*.js" do
