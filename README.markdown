@@ -8,18 +8,18 @@ It includes these filters:
 * Cache Buster - Write a fingerprint into each file name
 * Coffescript - Convert Javascript to Coffeescript
 * GZip - Create gzip'd version of your files
-* Handlebars - Parse handlebars templates
-* IIFE - Wrap source files in immediately invoked functional expressions
-* Jade - Parse Jade templates
+* Handlebars - Process handlebars templates
+* IIFE - Wrap source files in Immediately Invoked Function Expressions
+* Jade - Process Jade templates
 * LESS - Convert LESS to CSS
 * Markdown - Convert Markdown to HTML
 * Minispade - Wrap JS files in Minispade modules
 * Neuter - Require files in a file and generate one single combined file
 * SASS - Convert SASS to CSS
-* Stylus - Styluss to CSS
-* Tilt - Pase Title templates
+* Stylus - Convert Stylus to CSS
+* Tilt - Use Tilt to process 
 * Uglify - Minify JS
-* YUI CSS - Minifiy CSS
+* YUI CSS - Minify CSS
 * YUI Javascript - Minify JS
 
 Here's a quick example of a realistic project's Assetfile:
@@ -31,7 +31,7 @@ require 'rake-pipeline-web-filters'
 output "site"
 
 input "javascripts" do
-  match "**/*.coffe" do
+  match "**/*.coffee" do
     coffeescript
   end
 
