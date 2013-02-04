@@ -32,7 +32,7 @@ output "site"
 
 input "javascripts" do
   match "**/*.coffee" do
-    coffeescript
+    coffee_script
   end
 
   match "**/*.js" do
