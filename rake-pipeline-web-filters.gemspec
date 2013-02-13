@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "tilt"
   gem.add_development_dependency "sass"
+  gem.add_development_dependency "haml"
   gem.add_development_dependency "compass"
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "redcarpet", '~> 2.0'
