@@ -105,12 +105,24 @@ module Rake::Pipeline::Web::Filters
     #
     # Process an individual file with a filter.
     def process_with_filter(input, filter_class)
-      filter = filter_class.new
+      filter = instantiate_filter(filter_class)
 
       output = MemoryFileWrapper.new("/output", input.path, "UTF-8")
       output.create { filter.generate_output([input], output) }
 
       output
+    end
+
+    # @private
+    #
+    # Instantiates a filter from a Class or an Array like [MyClass, option1, option2...]
+    def instantiate_filter(arg)
+      if arg.respond_to?(:new)
+        arg.new
+      else
+        filter_class = arg.first
+        filter_class.new(*arg[(1..-1)])
+      end
     end
   end
 end
