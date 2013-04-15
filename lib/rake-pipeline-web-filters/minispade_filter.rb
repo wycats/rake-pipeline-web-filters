@@ -51,7 +51,7 @@ module Rake::Pipeline::Web::Filters
         module_id = @module_id_generator.call(input)
 
         if @string_module
-          contents = %{(function() {#{code}\n})();\n//@ sourceURL=#{module_id}}.to_json
+          contents = %{(function() {#{code}\n})();\n/*@if (@_jscript) @else @*/\n//@ sourceURL=#{module_id}\n/*@end@*/}.to_json
         else
           contents = "function() {#{code}\n}"
         end
