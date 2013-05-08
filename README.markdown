@@ -6,7 +6,7 @@ apps.
 It includes these filters:
 
 * Cache Buster - Write a fingerprint into each file name
-* Coffescript - Convert Javascript to Coffeescript
+* Coffescript - Convert Coffeescript to Javascript
 * GZip - Create gzip'd version of your files
 * Handlebars - Process handlebars templates
 * IIFE - Wrap source files in Immediately Invoked Function Expressions
