@@ -25,7 +25,7 @@ It includes these filters:
 Here's a quick example of a realistic project's Assetfile:
 
 ```ruby
-# Assetfile.rb
+# Assetfile
 require 'rake-pipeline-web-filters'
 
 output "site"
