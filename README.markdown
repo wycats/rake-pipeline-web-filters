@@ -1,12 +1,13 @@
 # Rake::Pipeline::Web::Filters [![Build Status](https://secure.travis-ci.org/wycats/rake-pipeline-web-filters.png?branch=master)](http://travis-ci.org/wycats/rake-pipeline-web-filters)
 
 This project contains a set of rake-pipeline filters for building web
-apps. 
+apps.
 
 It includes these filters:
 
 * Cache Buster - Write a fingerprint into each file name
 * Coffescript - Convert Coffeescript to Javascript
+* ES6 Module Transpiler - Transpile ES6 to ES5 Javascript ([Available Options](https://github.com/square/es6-module-transpiler))
 * GZip - Create gzip'd version of your files
 * Handlebars - Process handlebars templates
 * IIFE - Wrap source files in Immediately Invoked Function Expressions
@@ -17,7 +18,7 @@ It includes these filters:
 * Neuter - Require files in a file and generate one single combined file
 * SASS - Convert SASS to CSS
 * Stylus - Convert Stylus to CSS
-* Tilt - Use Tilt to process 
+* Tilt - Use Tilt to process
 * Uglify - Minify JS
 * YUI CSS - Minify CSS
 * YUI Javascript - Minify JS
