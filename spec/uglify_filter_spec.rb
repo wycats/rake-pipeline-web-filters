@@ -13,7 +13,7 @@ HERE
   }
 
   let(:expected_beautiful_js_output) {
-    %[var name = "Truckasaurus Gates";\n\nconsole.log(name);;]
+    %[var name = "Truckasaurus Gates";\n\nconsole.log(name);]
   }
 
   let(:filter_args) { [] }
