@@ -105,7 +105,7 @@ y = function(){
       tasks = filter.generate_rake_tasks
       lambda {
         tasks.each(&:invoke)
-      }.should raise_error(ExecJS::RuntimeError, /Error compiling input.coffee.+line 1/i)
+      }.should raise_error(ExecJS::RuntimeError, /Error compiling input.coffee.+/i)
     end
   end
 
