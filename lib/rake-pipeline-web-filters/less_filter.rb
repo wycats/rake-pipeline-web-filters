@@ -1,10 +1,8 @@
 require 'rake-pipeline-web-filters/filter_with_dependencies'
 
 module Rake::Pipeline::Web::Filters
-  # A filter that accepts a series of inputs and translates
-  # them using the Tilt template interface, which will attempt
-  # to guess which template language to use based on the input
-  # file extension.
+  # A filter that compiles input files written in Less
+  # to CSS using the Less compiler.
   #
   # Requires {https://rubygems.org/gems/less-js less-js}
   #
