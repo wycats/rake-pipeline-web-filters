@@ -59,7 +59,7 @@ module Rake::Pipeline::Web::Filters
         if should_skip_minify?(input, output)
           output.write input.read
         else
-          output.write Uglifier.compile(input.read, options)
+          output.write Uglifier.compile(input.read, output: options)
         end
       end
     end
