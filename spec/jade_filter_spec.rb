@@ -4,7 +4,7 @@ describe "JadeFilter" do
 
   let(:jade_input) {
     """
-!!! 5
+doctype html
 html
   head
     title Hello
