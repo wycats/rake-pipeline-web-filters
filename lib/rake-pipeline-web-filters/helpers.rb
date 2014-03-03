@@ -69,6 +69,12 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::CoffeeScriptFilter, *args, &block)
     end
 
+    # Add a new {ES6ModuleFilter} to the pipeline.
+    # @see ES6ModuleFilter#initialize
+    def es6_module(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::ES6ModuleFilter, *args, &block)
+    end
+
     # Add a new {YUIJavaScriptFilter} to the pipeline.
     # @see YUIJavaScriptFilter#initialize
     def yui_javascript(*args, &block)

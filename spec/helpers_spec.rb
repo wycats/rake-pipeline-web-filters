@@ -116,6 +116,13 @@ describe "Helpers" do
       filter.should be_kind_of(Rake::Pipeline::Web::Filters::IifeFilter)
     end
   end
+
+  describe "#es6_module" do
+    it "creates a ES6ModuleFilter" do
+      dsl.es6_module
+      filter.should be_kind_of(Rake::Pipeline::Web::Filters::ES6ModuleFilter)
+    end
+  end
 end
 
 describe "ProjectHelpers" do
