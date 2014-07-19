@@ -4,7 +4,7 @@ require "bundler/setup"
 
 desc "run the specs"
 task :spec do
-  sh "rspec -cfs spec"
+  sh "rspec -c -f d spec"
 end
 
 task :default => :spec
