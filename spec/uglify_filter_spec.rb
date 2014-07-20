@@ -114,7 +114,7 @@ HERE
 
   context "with Uglify options" do
     let(:filter_args) do
-      [{ :beautify => true }]
+      [output: { :beautify => true }]
     end
 
     it "passes options to the Uglify compressor" do
