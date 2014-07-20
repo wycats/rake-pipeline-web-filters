@@ -148,5 +148,4 @@ CSS
       tasks.each(&:invoke)
     end
   end
-
 end

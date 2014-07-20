@@ -1,9 +1,8 @@
 module Rake::Pipeline::Web::Filters
 
   class NeuterBatch
-    def initialize(config, known_files)
+    def initialize(config)
       @config = config || {}
-      @known_files = known_files
       @required = []
     end
 
@@ -15,9 +14,6 @@ module Rake::Pipeline::Web::Filters
     end
 
     def required(req)
-      unless @known_files.include?(req)
-        warn "Included '#{req}', which is not listed in :additional_dependencies. The pipeline may not invalidate properly."
-      end
       @required << req
     end
 
@@ -25,12 +21,8 @@ module Rake::Pipeline::Web::Filters
       @required.include?(req)
     end
 
-    def strip_requires(source)
-      requires = []
-      regexp = @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
-      # FIXME: This $1 may not be reliable with other regexps
-      source.gsub!(regexp){ requires << $1; '' }
-      requires
+    def regexp
+      @config[:require_regexp] || %r{^\s*require\(['"]([^'"]*)['"]\);?\s*}
     end
 
     def transform_path(path, input)
@@ -49,24 +41,38 @@ module Rake::Pipeline::Web::Filters
   module NeuterWrapper
     def batch(batch)
       @batch = batch
-      @batch.required(fullpath)
     end
 
-    def read
-      source = super
+    def neuter
+      return if required?
 
-      required_files = @batch.strip_requires(source).map do |req|
+      @batch.required fullpath
+
+      files_to_inject = dependencies.reject(&:required?)
+      dependent_content = files_to_inject.map(&:neuter).compact
+
+      this_file = @batch.filename_comment(self) + @batch.closure_wrap(stripped_source)
+
+      [dependent_content, this_file].reject(&:empty?).join("\n\n")
+    end
+
+    def required?
+      @batch.required? fullpath
+    end
+
+    def requires
+      read.scan(@batch.regexp).flatten
+    end
+
+    def dependencies
+      requires.map do |req|
         req_path = @batch.transform_path(req, self)
-        if req_path && !@batch.required?(File.expand_path(req_path, root))
-          @batch.file_wrapper(self.class, root, req_path, encoding).read
-        else
-          nil
-        end
-      end.compact
+        @batch.file_wrapper(self.class, root, req_path, encoding)
+      end
+    end
 
-      file = @batch.filename_comment(self) + @batch.closure_wrap(source)
-
-      (required_files << file).join("\n\n")
+    def stripped_source
+      read.gsub @batch.regexp, ''
     end
   end
 
@@ -95,16 +101,20 @@ module Rake::Pipeline::Web::Filters
 
     def generate_output(inputs, output)
       inputs.each do |input|
-        known_files = [input.fullpath] + additional_dependencies(input)
-        batch = NeuterBatch.new(@config, known_files)
+        batch = NeuterBatch.new @config
         file = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
-        output.write file.read
+        output.write file.neuter
       end
     end
 
     def additional_dependencies(input)
-      method = @config[:additional_dependencies]
-      method ? method.call(input).map{|p| File.expand_path(p, input.root) } : []
+      dependent_files(input).map(&:fullpath)
+    end
+
+    def dependent_files(input)
+      batch = NeuterBatch.new @config
+      wrapper = batch.file_wrapper(file_wrapper_class, input.root, input.path, input.encoding)
+      wrapper.dependencies
     end
   end
 end

@@ -15,7 +15,6 @@ describe "NeuterFilter" do
 
   def make_filter(input_files, *args)
     opts = args.last.is_a?(Hash) ? args.pop : {}
-    opts[:additional_dependencies] ||= proc{|input| %w(b c) }
     args.push(opts)
 
     filter = Rake::Pipeline::Web::Filters::NeuterFilter.new(*args)
@@ -95,7 +94,7 @@ describe "NeuterFilter" do
       ["lib/a", "require('lib/b');\nA"],
       ["lib/b", "require('lib/c');\nB"],
       ["lib/c", "C"]
-    ], :additional_dependencies => proc{ %w(lib/b lib/c) })
+    ])
 
     output_file.body.should == "C\n\nB\n\nA"
   end
@@ -152,8 +151,7 @@ describe "NeuterFilter" do
           ["lib/a.js", "require('b');\nA"],
           ["lib/b.js", "require('c');\nB"],
           ["lib/c.js", "C"]
-        ], :path_transform => proc{|path| "lib/#{path}.js" },
-           :additional_dependencies => proc{ %w(lib/b.js lib/c.js) })
+        ], :path_transform => proc{|path| "lib/#{path}.js" })
 
         output_file.body.should == "C\n\nB\n\nA"
       end
@@ -187,29 +185,29 @@ describe "NeuterFilter" do
     end
 
     describe "additional_dependencies" do
-      it "warns if required file is not contained" do
-        output = capture(:stderr) do
-          make_filter_with_inputs([
-            ["d", "require('e');\nD"],
-            ["e", "require('f');\nE"],
-            ["f", "F"]
-          ])
-        end
+      let!(:main_input_file) { make_input("a", %Q{require("b");}) }
+      let!(:required_input_file) { make_input("b", "foo") }
 
-        output.should include("Included '/path/to/input/e', which is not listed in :additional_dependencies. The pipeline may not invalidate properly.")
-        output.should include("Included '/path/to/input/f', which is not listed in :additional_dependencies. The pipeline may not invalidate properly.")
+      it "determines them from require statments in the file" do
+        filter = Rake::Pipeline::Web::Filters::NeuterFilter.new
+        filter.file_wrapper_class = MemoryFileWrapper
+        filter.input_files = []
+        filter.output_root = "/path/to/output"
+        filter.rake_application = Rake::Application.new
+
+        dependencies = filter.additional_dependencies(main_input_file)
+        dependencies.should include(required_input_file.fullpath)
       end
 
-      it "does not warn if full paths are provided" do
-        output = capture(:stderr) do
-          make_filter_with_inputs([
-            ["d", "require('e');\nD"],
-            ["e", "require('f');\nE"],
-            ["f", "F"]
-          ], :additional_dependencies => proc{ %w(/path/to/input/e /path/to/input/f) })
-        end
+      it "determines there are no dependencies" do
+        filter = Rake::Pipeline::Web::Filters::NeuterFilter.new
+        filter.file_wrapper_class = MemoryFileWrapper
+        filter.output_root = "/path/to/output"
+        filter.rake_application = Rake::Application.new
+        filter.input_files = []
 
-        output.should == ""
+        dependencies = filter.additional_dependencies(required_input_file)
+        dependencies.should == []
       end
     end
   end
