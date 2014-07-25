@@ -55,5 +55,18 @@ input "stylesheets" do
 end
 ```
 
+And the matching dependencies should be in your `Gemfile` :
+
+```ruby
+group :development do
+  gem 'coffee-script'
+  gem 'uglifier'
+  gem 'yui-compressor'
+  gem 'sass'
+  gem 'rake-pipeline'
+  gem 'rake-pipeline-web-filters'
+end
+```
+
 API documentation is hosted at
 <a href="http://rubydoc.info/github/wycats/rake-pipeline-web-filters/master/file/README.yard">rubydoc.info</a>
