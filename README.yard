@@ -23,3 +23,19 @@ In your +Assetfile+:
   match "*.scss" do
     filter Rake::Pipeline::Web::Filters::SassCompiler
   end
+
+= Available Filters
+
+* {Rake::Pipeline::Web::Filters::CacheBusterFilter}: Inserts a cache-busting key into the file name
+* {Rake::Pipeline::Web::Filters::CoffeeScriptFilter}: Compiles CoffeeScript to JavaScript
+* {Rake::Pipeline::Web::Filters::GzipFilter}: Gzips input files using zlib
+* {Rake::Pipeline::Web::Filters::HandlebarsFilter}: Converts Handlebars templates to JavaScript
+* {Rake::Pipeline::Web::Filters::IifeFilter}: Wraps input files in an IIFE
+* {Rake::Pipeline::Web::Filters::LessFilter}: Compiles Less to CSS
+* {Rake::Pipeline::Web::Filters::MinispadeFilter}: Wraps JS code for use with Minispade
+* {Rake::Pipeline::Web::Filters::SassCompiler}: Compiles SCSS or Sass to CSS
+* {Rake::Pipeline::Web::Filters::StylusFilter}: Compiles Stylus to CSS
+* {Rake::Pipeline::Web::Filters::TiltFilter}: Compiles templates with the Tilt template interface
+* {Rake::Pipeline::Web::Filters::UglifyFilter}: Compresses JavaScript with UglifyJS
+* {Rake::Pipeline::Web::Filters::YUICssFilter}: Compresses CSS with YUI Compressor
+* {Rake::Pipeline::Web::Filters::YUIJavaScriptFilter}: Compresses JavaScript with YUI Compressor
