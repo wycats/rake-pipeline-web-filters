@@ -51,6 +51,12 @@ module Rake::Pipeline::Web::Filters
       filter(Rake::Pipeline::Web::Filters::TiltFilter, *args, &block)
     end
 
+    # Add a new {SlimFilter} to the pipeline.
+    # @see SlimFilter#initialize
+    def slim(*args, &block)
+      filter(Rake::Pipeline::Web::Filters::SlimFilter, *args, &block)
+    end
+
     # Add a new {MarkdownFilter} to the pipeline.
     # @see MarkdownFilter#initialize
     def markdown(*args, &block)
